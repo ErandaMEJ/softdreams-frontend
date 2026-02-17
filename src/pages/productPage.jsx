@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Loader from "../components/loader";
 import axios from "axios";
 import ProductCard from "../components/productCard";
@@ -22,23 +22,6 @@ export default function ProductPage() {
   }, [selectedCategory, searchQuery]);
 
   useEffect(() => {
-    applyFilters();
-  }, [applyFilters]);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      // Fetch all products initially, client-side filtering will handle search/category
-      const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/products");
-      setProducts(response.data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyFilters = useCallback(() => {
     let filtered = [...products];
 
     // Category filter
@@ -79,6 +62,19 @@ export default function ProductPage() {
 
     setFilteredProducts(filtered);
   }, [products, selectedCategory, searchQuery, priceRange, sortBy]);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      // Fetch all products initially, client-side filtering will handle search/category
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/products");
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-primary">

@@ -73,7 +73,7 @@ export default function QuickViewModal() {
                             {product.labelledPrice > product.price && (
                                 <span className="text-lg text-gray-400 line-through">Rs. {product.labelledPrice.toLocaleString()}</span>
                             )}
-                            <span className="text-3xl font-bold text-primary">Rs. {product.price.toLocaleString()}</span>
+                            <span className="text-3xl font-bold text-black">Rs. {product.price.toLocaleString()}</span>
                         </div>
 
                         <p className="text-gray-600 leading-relaxed mb-6 line-clamp-4">
