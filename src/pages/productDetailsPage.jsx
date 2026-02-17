@@ -6,6 +6,7 @@ import Loader from "../components/loader";
 import SizeGuideModal from "../components/SizeGuideModal";
 import { FaRuler } from "react-icons/fa";
 import ProductCard from "../components/productCard";
+import ReviewsSection from "../components/reviewsSection";
 
 export default function ProductDetailsPage() {
   const { productID } = useParams();
@@ -14,10 +15,9 @@ export default function ProductDetailsPage() {
   const [error, setError] = useState("");
   const [isSizeGuideOpen, setSizeGuideOpen] = useState(false);
 
-  // review form state
-  const [name, setName] = useState("");
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
+
+
+  // Handle Add to Cart...
   const [reviewError, setReviewError] = useState("");
   const [reviewMessage, setReviewMessage] = useState("");
 
@@ -193,172 +193,82 @@ export default function ProductDetailsPage() {
           <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
         </div>
 
-        {/* Reviews + Form */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Visible reviews */}
+        {/* Reviews + Admin + Related */}
+        <div className="w-full flex flex-col gap-8">
+
+          {/* Reviews Section (Premium) */}
           <div className="bg-white rounded-xl shadow p-5">
-            <h2 className="text-xl font-semibold mb-3 text-gray-800">
-              Customer Reviews
-            </h2>
-
-            {visibleReviews.length === 0 && (
-              <p className="text-gray-500 text-sm">
-                No approved reviews yet.
-              </p>
-            )}
-
-            <div className="space-y-4 max-h-80 overflow-y-auto">
-              {visibleReviews.map((r) => (
-                <div
-                  key={r._id}
-                  className="border border-gray-100 rounded-lg p-3"
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-gray-800">
-                      {r.name}
-                    </span>
-                    <span className="text-sm text-yellow-500">
-                      {r.rating} / 5
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-700">{r.comment}</p>
-                </div>
-              ))}
-            </div>
+            <ReviewsSection
+              product={product}
+              productID={productID}
+              onRefresh={fetchProduct}
+            />
           </div>
 
-          {/* Review form */}
-          <div className="bg-white rounded-xl shadow p-5">
-            <h2 className="text-xl font-semibold mb-3 text-gray-800">
-              Write a Review
-            </h2>
+          {/* Admin review management */}
+          {isAdmin && (
+            <div className="w-full bg-white rounded-xl shadow p-5">
+              <h2 className="text-xl font-semibold mb-3 text-gray-800">
+                Admin: Manage Reviews
+              </h2>
 
-            {reviewError && (
-              <div className="mb-2 text-sm text-red-500">{reviewError}</div>
-            )}
-            {reviewMessage && (
-              <div className="mb-2 text-sm text-green-600">
-                {reviewMessage}
-              </div>
-            )}
+              {(!product.reviews || product.reviews.length === 0) && (
+                <p className="text-sm text-gray-500">No reviews yet.</p>
+              )}
 
-            <form onSubmit={handleSubmitReview} className="space-y-3">
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">
-                  Your Name
-                </label>
-                <input
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">
-                  Rating
-                </label>
-                <select
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                  required
-                >
-                  <option value="1">1 - Very bad</option>
-                  <option value="2">2 - Bad</option>
-                  <option value="3">3 - OK</option>
-                  <option value="4">4 - Good</option>
-                  <option value="5">5 - Excellent</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">
-                  Comment
-                </label>
-                <textarea
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                  rows={4}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-primary text-white py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition"
-              >
-                Submit Review
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* Admin review management */}
-        {isAdmin && (
-          <div className="w-full bg-white rounded-xl shadow p-5">
-            <h2 className="text-xl font-semibold mb-3 text-gray-800">
-              Admin: Manage Reviews
-            </h2>
-
-            {(!product.reviews || product.reviews.length === 0) && (
-              <p className="text-sm text-gray-500">No reviews yet.</p>
-            )}
-
-            <div className="space-y-3 max-h-80 overflow-y-auto">
-              {(product.reviews || []).map((r) => (
-                <div
-                  key={r._id}
-                  className="border border-gray-100 rounded-lg p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-800">
-                        {r.name}
-                      </span>
-                      <span className="text-sm text-yellow-500">
-                        {r.rating} / 5
-                      </span>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                        {r.isApproved ? "Approved" : "Pending"}
-                      </span>
+              <div className="space-y-3 max-h-80 overflow-y-auto">
+                {(product.reviews || []).map((r) => (
+                  <div
+                    key={r._id}
+                    className="border border-gray-100 rounded-lg p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-800">
+                          {r.name}
+                        </span>
+                        <span className="text-sm text-yellow-500">
+                          {r.rating} / 5
+                        </span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                          {r.isApproved ? "Approved" : "Pending"}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700 mt-1">
+                        {r.comment}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-700 mt-1">
-                      {r.comment}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    {!r.isApproved && (
+                    <div className="flex gap-2">
+                      {!r.isApproved && (
+                        <button
+                          onClick={() => handleApproveReview(r._id)}
+                          className="px-3 py-1 text-xs rounded bg-green-500 text-white hover:bg-green-600"
+                        >
+                          Approve
+                        </button>
+                      )}
                       <button
-                        onClick={() => handleApproveReview(r._id)}
-                        className="px-3 py-1 text-xs rounded bg-green-500 text-white hover:bg-green-600"
+                        onClick={() => handleDeleteReview(r._id)}
+                        className="px-3 py-1 text-xs rounded bg-red-500 text-white hover:bg-red-600"
                       >
-                        Approve
+                        Delete
                       </button>
-                    )}
-                    <button
-                      onClick={() => handleDeleteReview(r._id)}
-                      className="px-3 py-1 text-xs rounded bg-red-500 text-white hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Related Products Section */}
+          <div className="w-full">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">You Might Also Like</h2>
+            <div className="bg-white rounded-xl shadow p-6">
+              <RelatedProducts category={product.category} currentId={product.productID} />
             </div>
           </div>
-        )}
 
-        {/* Related Products Section */}
-        <div className="w-full mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">You Might Also Like</h2>
-          <div className="bg-white rounded-xl shadow p-6">
-            <RelatedProducts category={product.category} currentId={product.productID} />
-          </div>
         </div>
-
       </div>
     </div>
   );
