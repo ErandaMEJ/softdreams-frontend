@@ -1,8 +1,7 @@
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { GrGoogle } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/loader";
 
@@ -14,27 +13,23 @@ export default function LoginPage() {
 
   const goAfterLogin = (role) => navigate(role === "admin" ? "/admin" : "/");
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (response) => {
-      setIsLoading(true);
-      try {
-        const res = await axios.post(
-          import.meta.env.VITE_BACKEND_URL + "/users/google-login",
-          { token: response.access_token }
-        );
-        localStorage.setItem("token", res.data.token);
-        toast.success("Login successful!");
-        goAfterLogin(res.data.role);
-      } catch (err) {
-        console.log(err);
-        toast.error("Google login failed");
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    onError: () => toast.error("Google login failed"),
-    onNonOAuthError: () => toast.error("Google login failed"),
-  });
+  async function handleGoogleLogin(credential) {
+    setIsLoading(true);
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/users/google-login",
+        { token: credential }
+      );
+      localStorage.setItem("token", res.data.token);
+      toast.success("Login successful!");
+      goAfterLogin(res.data.role);
+    } catch (err) {
+      console.log(err);
+      toast.error("Google login failed");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   async function login() {
     setIsLoading(true);
@@ -132,14 +127,18 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => googleLogin()}
-              className="btn-secondary w-full gap-2"
-              disabled={isLoading}
-            >
-              <GrGoogle className="text-lg" /> Google
-            </button>
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  handleGoogleLogin(credentialResponse.credential);
+                }}
+                onError={() => toast.error("Google login failed")}
+                theme="outline"
+                size="large"
+                width="100%"
+                text="continue_with"
+              />
+            </div>
 
             <p className="pt-4 text-center text-sm text-secondary/60">
               Don’t have an account?{" "}
