@@ -124,7 +124,7 @@ export default function Header() {
 
           {/* User Data (Desktop) */}
           <div className="hidden lg:block">
-            <UserData />
+            <UserData scrolled={scrolled} />
           </div>
         </div>
       </div>

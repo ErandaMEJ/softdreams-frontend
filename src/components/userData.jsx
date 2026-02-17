@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function UserData() {
+export default function UserData({ scrolled }) {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -23,13 +23,21 @@ export default function UserData() {
       <div className="flex items-center gap-2">
         <Link
           to="/login"
-          className="px-4 py-2 rounded-full border border-black/10 bg-black/20 lg:text-white text-black  font-semibold hover:bg-black/35 transition"
+          className={`px-4 py-2 rounded-full border font-semibold transition
+            ${scrolled
+              ? "border-secondary/10 bg-secondary/5 text-secondary hover:bg-secondary/10"
+              : "border-white/10 bg-white/10 text-white hover:bg-white/20"
+            }`}
         >
           Login
         </Link>
         <Link
           to="/register"
-          className="px-4 py-2 rounded-full border border-black/10 lg:bg-white/50 bg-red-200 text-black font-semibold hover:bg-white/90 transition"
+          className={`px-4 py-2 rounded-full border font-semibold transition
+            ${scrolled
+              ? "border-accent bg-accent text-white hover:bg-accent-dark"
+              : "border-white/10 bg-white/20 text-white hover:bg-white/30"
+            }`}
         >
           Register
         </Link>
@@ -86,13 +94,14 @@ export default function UserData() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="
+            className={`
               inline-flex items-center gap-3
-              rounded-full border border-white/15 bg-white/10
-              px-3 py-2 text-white
-              hover:bg-white/15 transition
-              select-none
-            "
+              rounded-full border px-3 py-2 transition select-none
+              ${scrolled
+                ? "border-secondary/10 bg-secondary/5 text-secondary hover:bg-secondary/10"
+                : "border-white/15 bg-white/10 text-white hover:bg-white/15"
+              }
+            `}
           >
             <img
               src={user.image}
