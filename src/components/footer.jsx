@@ -88,7 +88,7 @@ export default function Footer() {
                   <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                   <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
                 </svg>
-                Free Shipping
+                Island-Wide Delivery
               </span>
               <span className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
@@ -99,28 +99,12 @@ export default function Footer() {
             </div>
 
             {/* Payment Methods */}
+            {/* Payment Methods */}
             <div className="flex flex-wrap justify-center items-center gap-4">
-              <span className="text-xs text-primary/40 font-medium">We Accept:</span>
-              <div className="flex gap-3">
-                {/* Visa */}
-                <div className="h-8 w-12 bg-white rounded flex items-center justify-center">
-                  <span className="text-blue-600 font-bold text-xs">VISA</span>
-                </div>
-                {/* Mastercard */}
-                <div className="h-8 w-12 bg-white rounded flex items-center justify-center">
-                  <div className="flex">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-orange-400 -ml-1.5"></div>
-                  </div>
-                </div>
-                {/* Amex */}
-                <div className="h-8 w-12 bg-blue-500 rounded flex items-center justify-center">
-                  <span className="text-white font-bold text-[10px]">AMEX</span>
-                </div>
-                {/* PayPal */}
-                <div className="h-8 px-3 bg-white rounded flex items-center justify-center">
-                  <span className="text-blue-600 font-bold text-xs">PayPal</span>
-                </div>
+              <span className="text-xs text-primary/40 font-medium">Payment Method:</span>
+              <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full hover:bg-white/10 transition-colors cursor-default">
+                <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+                <span className="text-xs font-semibold text-white tracking-wide">CASH ON DELIVERY</span>
               </div>
             </div>
           </div>
