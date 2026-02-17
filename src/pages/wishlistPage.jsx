@@ -10,7 +10,6 @@ export default function WishlistPage() {
 
     const handleAddToCart = (product) => {
         addToCart(product, 1);
-        toast.success("Added to cart!");
     };
 
     const handleRemove = (productID) => {
