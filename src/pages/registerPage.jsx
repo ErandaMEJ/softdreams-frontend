@@ -3,6 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/loader";
+import { GrGoogle } from "react-icons/gr"; // Added for consistency if needed, though not used in original logic yet
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -20,7 +21,6 @@ export default function RegisterPage() {
     if (email.trim() == "") return toast.error("Email is required.");
     if (password.trim() == "") return toast.error("Password is required.");
     if (password !== confirmPassword) return toast.error("Passwords do not match.");
-    if (password != confirmPassword) return toast.error("Passwords do not match.");
 
     setIsLoading(true);
     try {
@@ -32,7 +32,7 @@ export default function RegisterPage() {
       });
 
       navigate("/login");
-      toast.success("Registration successful! Welcome to I computers.");
+      toast.success("Registration successful! Welcome to SoftDreams.");
       setIsLoading(false);
     } catch (err) {
       toast.error("Registration failed! Please check your data and try again.");
@@ -41,99 +41,108 @@ export default function RegisterPage() {
     }
   }
 
-  const inputCls =
-    "w-full h-12 rounded-xl bg-white/10 text-white placeholder:text-white/50 px-4 outline-none border border-white/15 focus:border-accent focus:ring-2 focus:ring-accent/20 transition";
-
   return (
-    <div className="min-h-screen w-full bg-[url('/bg.jpg')] bg-center bg-cover bg-no-repeat relative">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+    <div className="min-h-screen w-full flex">
+      {/* Left Side - Image Board (Desktop) */}
+      <div className="hidden lg:flex w-1/2 bg-accent relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=2057&auto=format&fit=crop"
+          alt="Luxury Bedding Interior"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-      <div className="relative z-10 min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
-        {/* Left side (desktop only) - unchanged */}
-        <div className="hidden lg:flex flex-col justify-center items-center p-10">
-          <img
-            src="/logo.png"
-            alt="logo"
-            className="w-[220px] mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
-          />
-          <h1 className="text-[48px] font-bold text-gold text-center leading-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-            Powering Your Digital World
-          </h1>
-          <p className="text-[20px] text-primary italic mt-4 text-center max-w-[400px] leading-relaxed">
-            Best computers, parts, and tech support across Sri Lanka.
+        <div className="relative z-10 w-full h-full flex flex-col justify-end p-16 text-white">
+          <h1 className="text-5xl font-bold mb-4">Join SoftDreams</h1>
+          <p className="text-xl text-white/90 max-w-md">
+            Create an account to access exclusive collections and personalize your sleep experience.
           </p>
         </div>
+      </div>
 
-        {/* Right side (mobile optimized + logo shown) */}
-        <div className="flex justify-center items-center px-4 py-10">
-          <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-7">
-            {/* ✅ Mobile logo */}
-            <div className="lg:hidden flex justify-center mb-4">
-              <img
-                onClick={() => (window.location.href = "/")}
-                src="/logo.png"
-                alt="logo"
-                className="w-28 cursor-pointer"
-              />
+      {/* Right Side - Form */}
+      <div className="w-full lg:w-1/2 bg-primary flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="text-center lg:text-left mb-8">
+            <h2 className="text-3xl font-bold text-secondary mb-2">Create Account</h2>
+            <p className="text-secondary/60">Join us today for a better night's sleep.</p>
+          </div>
+
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!isLoading) register();
+            }}
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">First Name</label>
+                <input
+                  onChange={(e) => setFirstName(e.target.value)}
+                  type="text"
+                  placeholder="John"
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">Last Name</label>
+                <input
+                  onChange={(e) => setLastName(e.target.value)}
+                  type="text"
+                  placeholder="Doe"
+                  className="input-field"
+                />
+              </div>
             </div>
 
-            <h1 className="text-3xl font-bold text-white text-center lg:text-left">
-              Register
-            </h1>
-            <p className="mt-1 text-sm text-white/60 text-center lg:text-left">
-              Create your account in a few seconds.
-            </p>
-
-            <div className="mt-6 space-y-3">
-              <input
-                onChange={(e) => setFirstName(e.target.value)}
-                type="text"
-                placeholder="First name"
-                className={inputCls}
-              />
-              <input
-                onChange={(e) => setLastName(e.target.value)}
-                type="text"
-                placeholder="Last name"
-                className={inputCls}
-              />
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Email</label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
-                placeholder="Email"
-                className={inputCls}
+                placeholder="john@example.com"
+                className="input-field"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Password</label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                placeholder="Password"
-                className={inputCls}
+                placeholder="Create a password"
+                className="input-field"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Confirm Password</label>
               <input
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 type="password"
                 placeholder="Confirm password"
-                className={inputCls}
+                className="input-field"
               />
-
-              <button
-                onClick={register}
-                className="w-full h-12 rounded-xl bg-accent text-primary font-semibold hover:bg-accent/85 transition shadow-sm active:scale-[0.99]"
-              >
-                Register Now
-              </button>
-
-              <p className="pt-2 text-sm text-white/70 text-center">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="text-gold hover:text-white underline underline-offset-4"
-                >
-                  Login
-                </Link>
-              </p>
             </div>
-          </div>
+
+            <button
+              type="submit"
+              className="btn-primary w-full mt-2"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating Account..." : "Register Now"}
+            </button>
+
+            <p className="pt-4 text-center text-sm text-secondary/60">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-semibold text-accent hover:text-accent/80 transition"
+              >
+                Sign in
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
 

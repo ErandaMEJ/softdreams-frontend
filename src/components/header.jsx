@@ -1,140 +1,180 @@
-import { useState } from "react";
-import { FaCartShopping } from "react-icons/fa6";
+import { useState, useEffect } from "react";
+import { FaCartShopping, FaHeart } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
-import { Link } from "react-router-dom";
+import { IoClose } from "react-icons/io5";
+import { Link, useLocation } from "react-router-dom";
 import UserData from "./userData";
+import { useWishlist } from "../context/WishlistContext";
 
 export default function Header() {
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const { wishlist } = useWishlist();
+
+  // Handle scroll effect for glassmorphism
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { to: "/", label: "Home" },
+    { to: "/products", label: "Products" },
+    { to: "/about", label: "About" },
+    { to: "/contact", label: "Contact" },
+  ];
 
   return (
-    <header className="w-full h-[68px] bg-accent flex relative border-b border-white/10 shadow-md">
-      {/* Mobile Menu Button */}
-      <TiThMenu
-        onClick={() => setSideBarOpen(true)}
-        className="text-white my-auto text-3xl ml-5 lg:hidden cursor-pointer hover:opacity-90 transition"
-      />
+    <header
+      className={`
+        fixed top-0 left-0 w-full z-50 transition-all duration-300
+        ${scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-md h-[60px] sm:h-[70px]"
+          : "bg-gradient-to-b from-black/30 to-transparent h-[70px] sm:h-[80px]"
+        }
+      `}
+    >
+      <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
-      {/* Logo */}
-      <img
-        onClick={() => (window.location.href = "/")}
-        src="/logo.png"
-        className="h-[70px] my-auto ml-3 object-contain"
-        alt="Logo"
-      />
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setSideBarOpen(true)}
+          className={`lg:hidden p-2 rounded-full transition ${scrolled ? "text-secondary hover:bg-secondary/10" : "text-white hover:bg-white/10"}`}
+        >
+          <TiThMenu className="text-2xl" />
+        </button>
 
-      {/* Desktop Links */}
-      <div className="w-full h-full hidden lg:flex text-[18px] font-bold text-secondary justify-center items-center gap-10">
-        <Link className="hover:text-primary/90 transition-colors" to="/">
-          Home
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2">
+          <span className={`text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${scrolled ? "text-accent" : "text-white"}`}>
+            SoftDreams
+          </span>
         </Link>
-        <Link className="hover:text-primary/90 transition-colors" to="/products">
-          Products
-        </Link>
-        <Link className="hover:text-primary/90 transition-colors" to="/about">
-          About
-        </Link>
-        <Link className="hover:text-primary/90 transition-colors" to="/contact">
-          Contact
-        </Link>
-      </div>
 
-      {/* Desktop User */}
-      <div className="absolute right-[90px] top-0 h-full items-center hidden lg:flex">
-        <div className="px-2 py-1 flex items-center ">
-          <UserData />
+        {/* Desktop Links */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`
+                relative text-sm font-medium transition-colors duration-300
+                ${location.pathname === link.to
+                  ? "text-accent"
+                  : scrolled ? "text-secondary hover:text-accent" : "text-white/90 hover:text-white"
+                }
+                after:content-[''] after:absolute after:left-0 after:bottom-[-4px] 
+                after:w-0 after:h-[2px] after:bg-accent after:transition-all after:duration-300
+                hover:after:w-full
+              `}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-2">
+
+          {/* Wishlist */}
+          <Link
+            to="/wishlist"
+            className={`
+              relative p-2 rounded-full transition-all duration-300 group
+              ${scrolled ? "hover:bg-red-50 text-secondary" : "hover:bg-white/10 text-white"}
+            `}
+          >
+            <FaHeart className={`text-xl group-hover:scale-110 transition-transform ${scrolled ? "group-hover:text-red-500" : ""}`} />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold ring-2 ring-white">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
+
+          {/* Cart */}
+          <Link
+            to="/cart"
+            className={`
+              relative p-2 rounded-full transition-all duration-300 group
+              ${scrolled ? "hover:bg-accent/10 text-secondary" : "hover:bg-white/10 text-white"}
+            `}
+          >
+            <FaCartShopping className="text-xl group-hover:scale-110 transition-transform" />
+            {/* Optional badge placeholder if you have cart count */}
+            {/* <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" /> */}
+          </Link>
+
+          {/* User Data (Desktop) */}
+          <div className="hidden lg:block">
+            <UserData />
+          </div>
         </div>
       </div>
-
-      {/* Cart Button */}
-      <Link
-        to="/cart"
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-primary"
-      >
-        <div className="w-11 h-11 rounded-full bg-white/10 border border-white/15 flex items-center justify-center hover:bg-white/20 transition">
-          <FaCartShopping className="text-2xl" />
-        </div>
-      </Link>
 
       {/* --------------- Sidebar Overlay ---------------- */}
-      {sideBarOpen && (
-        <div
-          className="fixed inset-0 bg-black/55 backdrop-blur-[2px] z-20 lg:hidden"
-          onClick={() => setSideBarOpen(false)}
-        />
-      )}
+      <div
+        className={`
+          fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] lg:hidden transition-opacity duration-300
+          ${sideBarOpen ? "opacity-100 visible" : "opacity-0 invisible"}
+        `}
+        onClick={() => setSideBarOpen(false)}
+      />
 
       {/* ---------------- Animated Sidebar ---------------- */}
       <div
         className={`
-          fixed top-0 left-0 h-screen w-[280px] z-30 lg:hidden
-          transform transition-transform duration-300
+          fixed top-0 left-0 bottom-0 h-screen w-[280px] bg-white z-[100] shadow-2xl transform transition-transform duration-300 ease-out
           ${sideBarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* Sidebar Shell */}
-        <div className="h-full bg-white/95 backdrop-blur border-r border-black/10 shadow-2xl">
+        <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="w-full h-[68px] bg-accent flex justify-between items-center px-4 border-b border-white/10">
-            <img
-              onClick={() => (window.location.href = "/")}
-              src="/logo.png"
-              className="h-[64px] object-contain cursor-pointer"
-              alt="Logo"
-            />
+          <div className="flex items-center justify-between p-5 border-b border-gray-100">
+            <span className="text-xl font-bold text-accent">SoftDreams</span>
             <button
-              type="button"
               onClick={() => setSideBarOpen(false)}
-              className="h-10 w-10 rounded-full border border-white/20 bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition"
-              aria-label="Close menu"
+              className="p-2 rounded-full hover:bg-gray-100 text-secondary transition"
             >
-              <TiThMenu className="text-2xl" />
+              <IoClose className="text-2xl" />
             </button>
           </div>
 
           {/* Sidebar Links */}
-          <div className="px-4 py-5">
-            <p className="text-xs font-semibold text-secondary/50 uppercase tracking-wide px-2">
-              Menu
-            </p>
-
-            <div className="mt-3 flex flex-col gap-2">
-              {[
-                { to: "/", label: "Home" },
-                { to: "/products", label: "Products" },
-                { to: "/about", label: "About" },
-                { to: "/contact", label: "Contact" },
-              ].map((i) => (
+          <div className="flex-1 overflow-y-auto py-4 px-3">
+            <div className="flex flex-col gap-1">
+              {navLinks.map((link) => (
                 <Link
-                  key={i.to}
-                  to={i.to}
+                  key={link.to}
+                  to={link.to}
                   onClick={() => setSideBarOpen(false)}
-                  className="
-                    flex items-center justify-between
-                    px-4 py-3 rounded-2xl
-                    text-secondary font-semibold
-                    hover:bg-black/5 transition
-                  "
+                  className={`
+                    px-4 py-3 rounded-xl text-sm font-medium transition-all
+                    ${location.pathname === link.to
+                      ? "bg-accent/10 text-accent"
+                      : "text-secondary hover:bg-gray-50"
+                    }
+                  `}
                 >
-                  {i.label}
-                  <span className="text-secondary/40">›</span>
+                  {link.label}
                 </Link>
               ))}
             </div>
 
-            {/* User card */}
-            <div className="mt-6 rounded-2xl border border-black/10 bg-white p-3 shadow-sm">
-              <p className="text-xs font-semibold  text-secondary/50 uppercase tracking-wide px-2">
-                Account
-              </p>
-              <div className="mt-2 flex justify-center">
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <div className="px-4">
                 <UserData />
               </div>
             </div>
           </div>
 
-          {/* Bottom safe space */}
-          <div className="h-[env(safe-area-inset-bottom)]" />
+          <div className="p-4 text-center text-xs text-gray-400">
+            © 2026 SoftDreams
+          </div>
         </div>
       </div>
     </header>

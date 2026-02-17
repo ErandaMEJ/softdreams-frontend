@@ -17,7 +17,7 @@ export default function ProductDetailsPage() {
   const [reviewError, setReviewError] = useState("");
   const [reviewMessage, setReviewMessage] = useState("");
 
- 
+
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const token = localStorage.getItem("token");
   const isAdmin = user?.isAdmin === true;
@@ -334,7 +334,58 @@ export default function ProductDetailsPage() {
             </div>
           </div>
         )}
+
+        {/* Related Products Section */}
+        <div className="w-full mt-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">You Might Also Like</h2>
+          <div className="bg-white rounded-xl shadow p-6">
+            <RelatedProducts category={product.category} currentId={product.productID} />
+          </div>
+        </div>
+
       </div>
+    </div>
+  );
+}
+
+// Sub-component for Related Products to handle its own fetching
+function RelatedProducts({ category, currentId }) {
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get(import.meta.env.VITE_BACKEND_URL + "/products?category=" + category)
+      .then(res => {
+        // Filter out current product and take top 4
+        const filtered = res.data
+          .filter(p => p.productID !== currentId)
+          .slice(0, 4);
+        setRelated(filtered);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [category, currentId]);
+
+  if (loading) return <div>Loading suggestions...</div>;
+
+  if (related.length === 0) return <div className="text-gray-500 italic">No related products found.</div>;
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {related.map(p => (
+        <div key={p.productID} className="border border-gray-100 rounded-lg p-4 hover:shadow-lg transition-shadow">
+          <a href={`/products/${p.productID}`} className="block">
+            <div className="h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
+              <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
+            </div>
+            <h3 className="font-semibold text-gray-800 line-clamp-1">{p.name}</h3>
+            <p className="text-primary font-bold mt-1">Rs. {p.price.toLocaleString()}</p>
+          </a>
+        </div>
+      ))}
     </div>
   );
 }

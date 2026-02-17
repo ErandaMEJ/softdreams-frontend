@@ -4,127 +4,142 @@ import { PiPlus } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/loader";
 import ProductDeleteButton from "../../components/productDeleteButton";
+import { HiOutlineSearch, HiOutlinePencil } from "react-icons/hi";
 
 export default function AdminProductPage() {
   const [products, setProducts] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  
   useEffect(() => {
-    if (!loaded){
+    if (!loaded) {
       axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/products")
-      .then((response) => {
-        console.log(response.data);
-        setProducts(response.data);
-        setLoaded(true);
-      });
+        .get(import.meta.env.VITE_BACKEND_URL + "/products")
+        .then((response) => {
+          setProducts(response.data);
+          setLoaded(true);
+        })
+        .catch(() => setLoaded(true));
     }
-    
   }, [loaded]);
 
+  const filteredProducts = products.filter(item =>
+    item.name.toLowerCase().includes(search.toLowerCase()) ||
+    item.productID.toLowerCase().includes(search.toLowerCase()) ||
+    item.category.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="w-full min-h-screen  bg-primary flex flex-col items-center p-10 relative text-secondary">
-      <h1 className="text-3xl font-semibold mb-6 text-secondary border-b-2 border-accent pb-2 ">
-        Product Management
-      </h1>
-
-      <div 
-        className="w-full max-w-7xl p-2 mb-8 overflow-x-auto  bg-white shadow-xl rounded-2xl ">
-        {loaded ? 
-        <table 
-            className="w-full max-w-7xl justify-center border-separate border-spacing-0 overflow-hidden text-sm  table-auto  ">
-          <thead 
-              className="sticky top-0 z-10 bg-accent text-white uppercase text-xs ">
-            <tr>
-              <th className="py-3 px-4 rounded-tl-2xl">Image</th>
-              <th className="py-3 px-4">Product ID</th>
-              <th className="py-3 px-4 ">Name</th>
-              <th className="py-3 px-4">Price</th>
-              <th className="py-3 px-4">Label Price</th>
-              <th className="py-3 px-4">Category</th>
-              <th className="py-3 px-4">Brand</th>
-              <th className="py-3 px-4">Model</th>
-              <th className="py-3 px-3">Stock</th>
-              <th className="py-3 px-3">Available</th>
-              <th className="py-3 px-4 rounded-tr-2xl ">Actions</th>
-            </tr>
-          </thead>
-          <tbody className=" bg-white divide-y divide-gray-100 ">
-            {products.map((item, index) => {
-            return(
-
-              <tr
-                key={index}
-                className="border-t border-gray-200 hover:bg-accent/10 transition-all "
-              >
-                <td className="py-3 px-4 align-middle">
-                  <img
-                    src={item.images[0]}
-                    
-                    className="w-[38px] h-[38px] rounded-lg object-cover border border-gray-200 shadow-sm "
-                  />
-                </td>
-                <td className="py-3 px-4 font-medium">{item.productID}</td>
-                <td className="py-3 px-4 uppercase text-sm tracking-wider ">{item.name}</td>
-                <td className="py-3 px-4 text-accent font-semibold">
-                  Rs. {item.price.toLocaleString()}
-                </td>
-                <td className="py-3 px-4 text-gray-500 text-sm line-through decoration-1 ">
-                  Rs. {item.labelledPrice.toLocaleString()}
-                </td>
-                <td className="py-3 px-4 text-sm">{item.category}</td>
-                <td className="py-3 px-4">{item.brand}</td>
-                <td className="py-3 px-4">{item.model}</td>
-                <td className="py-3 px-4 font-medium text-sm">{item.stock}</td>
-                <td className="py-3 px-4 text-sm font-medium text-center ">
-                  <td
-                    className={`px-3 py-1 text-xs  font-semibold  rounded-full ${
-                      item.isAvailable
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {item.isAvailable ? "Yes" : "No"}
-                  </td>
-                  
-                </td>
-
-                <td className="py-3 px-4 text-sm ">
-                    <div className="inline-flex items-center gap-2 ">
-                      {/* <Link 
-                          to="/admin/update-product"
-                          className="my-1   flex justify-center items-center font-bold  px-3 py-2 bg-accent/20 text-xs text-accent rounded-2xl text-shadow-accent hover:bg-accent hover:text-white transition-all duration-300"
-                          state={item}>                          
-                          Edit
-                      </Link> */}
-                      
-                      <button onClick={()=>{
-                          navigate("/admin/update-product", {state: item})
-                        }}
-                          className="my-1 flex justify-center items-center font-bold  px-6 py-2 bg-accent/20 text-xs text-accent rounded-2xl text-shadow-accent hover:bg-accent hover:text-white transition-all duration-300">
-                          Edit
-                      </button>
-                          
-                    <ProductDeleteButton productID = {item.productID} reload={()=>{setLoaded(false)}}/>
-                    </div>
-                </td>
-                
-              </tr>
-            )
-            })}
-          </tbody>
-        </table>:<Loader />}
+    <div className="w-full h-full flex flex-col relative text-secondary">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+        <h1 className="text-3xl font-bold text-secondary">
+          Products
+        </h1>
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-initial">
+            <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/50 text-lg" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="pl-10 pr-4 py-2 rounded-xl border border-secondary/20 bg-white/50 focus:bg-white focus:border-accent outline-none transition w-full sm:w-64"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Link
+            to="/admin/add-product"
+            className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-xl font-semibold shadow-lg shadow-accent/20 hover:bg-accent/90 transition hover:-translate-y-0.5"
+          >
+            <PiPlus className="text-lg" />
+            <span className="hidden sm:inline">Add Product</span>
+          </Link>
+        </div>
       </div>
 
-      <Link
-        to="/admin/add-product"
-        className="fixed right-[30px] bottom-[30px] w-[60px] h-[60px] flex justify-center items-center 
-        text-5xl text-white bg-accent rounded-full shadow-lg hover:bg-gold transition-all duration-300 hover:scale-110"
-      >
-        <PiPlus />
-      </Link>
+      <div className="w-full overflow-hidden bg-white/60 backdrop-blur-md shadow-sm rounded-2xl border border-white/40">
+        {loaded ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-secondary/5 text-secondary/70 text-xs uppercase tracking-wider border-b border-secondary/10">
+                  <th className="py-4 px-6 font-semibold">Product</th>
+                  <th className="py-4 px-6 font-semibold">Category</th>
+                  <th className="py-4 px-6 font-semibold">Price</th>
+                  <th className="py-4 px-6 font-semibold">Stock</th>
+                  <th className="py-4 px-6 font-semibold">Status</th>
+                  <th className="py-4 px-6 font-semibold text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-secondary/5">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((item, index) => (
+                    <tr
+                      key={index}
+                      className="hover:bg-white/60 transition-colors"
+                    >
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={item.images[0]}
+                            className="w-12 h-12 rounded-lg object-cover border border-secondary/10 shadow-sm"
+                          />
+                          <div>
+                            <p className="font-semibold text-secondary">{item.name}</p>
+                            <p className="text-xs text-secondary/50">#{item.productID}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-sm text-secondary/80">{item.category}</td>
+                      <td className="py-4 px-6">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-accent">LKR. {item.price.toLocaleString()}</span>
+                          {item.labelledPrice > item.price && (
+                            <span className="text-xs text-secondary/40 line-through">LKR. {item.labelledPrice.toLocaleString()}</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-sm font-medium">{item.stock}</td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold
+                                ${item.isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}
+                         `}>
+                          {item.isAvailable ? "Available" : "Unavailable"}
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-6 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => navigate("/admin/update-product", { state: item })}
+                            className="p-2 rounded-lg text-secondary/70 hover:bg-secondary/5 hover:text-accent transition"
+                            title="Edit Product"
+                          >
+                            <HiOutlinePencil className="text-lg" />
+                          </button>
+                          <div className="scale-90">
+                            <ProductDeleteButton productID={item.productID} reload={() => setLoaded(false)} />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="py-8 text-center text-secondary/50">
+                      No products found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="flex justify-center py-20">
+            <Loader />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

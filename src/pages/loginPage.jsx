@@ -12,13 +12,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const inputCls =
-    "w-full h-12 rounded-xl bg-white/10 text-white placeholder:text-white/50 px-4 outline-none border border-white/15 focus:border-accent focus:ring-2 focus:ring-accent/20 transition";
-  const btnCls =
-    "w-full h-12 rounded-xl font-semibold border border-accent bg-accent text-primary hover:bg-accent/85 transition shadow-sm active:scale-[0.99]";
-  const btnGhost =
-    "w-full h-12 rounded-xl font-semibold border border-white/15 bg-white/10 text-white hover:bg-white/15 transition";
-
   const goAfterLogin = (role) => navigate(role === "admin" ? "/admin" : "/");
 
   const googleLogin = useGoogleLogin({
@@ -51,7 +44,7 @@ export default function LoginPage() {
         password,
       });
       localStorage.setItem("token", res.data.token);
-      toast.success("Login successful! Welcome back.");
+      toast.success("Welcome back to SoftDreams.");
       goAfterLogin(res.data.role);
     } catch (err) {
       console.log(err);
@@ -62,101 +55,102 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[url('/bg.jpg')] bg-cover bg-center relative">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+    <div className="min-h-screen w-full flex">
+      {/* Left Side - Image Board (Desktop) */}
+      <div className="hidden lg:flex w-1/2 bg-accent relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1974&auto=format&fit=crop"
+          alt="Luxury Bedroom"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-      <div className="relative z-10 min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
-        {/* Left (desktop only) - unchanged */}
-        <div className="hidden lg:flex flex-col justify-center px-16">
-          <img
-            onClick={() => (window.location.href = "/")}
-            src="/logo.png"
-            alt="logo"
-            className="w-56 cursor-pointer"
-          />
-          <h1 className="mt-6 text-5xl font-bold text-gold leading-tight">
-            Powering Your Digital World
-          </h1>
-          <p className="mt-4 text-white/80 text-lg max-w-md">
-            Best computers, parts, and tech support across Sri Lanka.
+        <div className="relative z-10 w-full h-full flex flex-col justify-end p-16 text-white">
+          <h1 className="text-5xl font-bold mb-4">SoftDreams</h1>
+          <p className="text-xl text-white/90 max-w-md">
+            Experience the comfort of cloud-like bedding. Your perfect night's sleep begins here.
           </p>
         </div>
+      </div>
 
-        {/* Right (mobile optimized) */}
-        <div className="flex items-center justify-center px-4 py-10">
-          <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-7">
-            {/* ✅ Mobile logo (shows only on mobile) */}
-            <div className="lg:hidden flex justify-center mb-4">
-              <img
-                onClick={() => (window.location.href = "/")}
-                src="/logo.png"
-                alt="logo"
-                className="w-28 cursor-pointer"
-              />
-            </div>
+      {/* Right Side - Form */}
+      <div className="w-full lg:w-1/2 bg-primary flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="text-center lg:text-left mb-10">
+            <h2 className="text-3xl font-bold text-secondary mb-2">Welcome Back</h2>
+            <p className="text-secondary/60">Please enter your details to sign in.</p>
+          </div>
 
-            <h1 className="text-3xl font-bold text-white text-center lg:text-left">
-              Login
-            </h1>
-            <p className="mt-1 text-sm text-white/60 text-center lg:text-left">
-              Welcome back. Please sign in.
-            </p>
-
-            <form
-              className="mt-6 space-y-3"
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!isLoading) login();
-              }}
-            >
+          <form
+            className="space-y-5"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!isLoading) login();
+            }}
+          >
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Email</label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
-                placeholder="Email"
-                className={inputCls}
+                placeholder="Enter your email"
+                className="input-field"
+                required
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Password</label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                placeholder="Password"
-                className={inputCls}
+                placeholder="••••••••"
+                className="input-field"
+                required
               />
+            </div>
 
-              <div className="flex justify-end">
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-white/70 hover:text-white underline underline-offset-4"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
-              <button type="submit" className={btnCls} disabled={isLoading}>
-                Login
-              </button>
-
-              <button
-                type="button"
-                onClick={() => googleLogin()}
-                className={btnGhost}
-                disabled={isLoading}
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-sm font-medium text-accent hover:text-accent/80 transition"
               >
-                <span className="inline-flex items-center justify-center gap-2">
-                  <GrGoogle /> Continue with Google
-                </span>
-              </button>
+                Forgot password?
+              </Link>
+            </div>
 
-              <p className="pt-3 text-sm text-white/70 text-center">
-                Don’t have an account?{" "}
-                <Link
-                  to="/register"
-                  className="text-gold hover:text-white underline underline-offset-4"
-                >
-                  Register
-                </Link>
-              </p>
-            </form>
-          </div>
+            <button type="submit" className="btn-primary w-full" disabled={isLoading}>
+              {isLoading ? "Signing in..." : "Sign In"}
+            </button>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-secondary/10"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-primary text-secondary/50">Or continue with</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => googleLogin()}
+              className="btn-secondary w-full gap-2"
+              disabled={isLoading}
+            >
+              <GrGoogle className="text-lg" /> Google
+            </button>
+
+            <p className="pt-4 text-center text-sm text-secondary/60">
+              Don’t have an account?{" "}
+              <Link
+                to="/register"
+                className="font-semibold text-accent hover:text-accent/80 transition"
+              >
+                Sign up
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
 

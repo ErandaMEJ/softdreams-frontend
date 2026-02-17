@@ -1,33 +1,147 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #fbfbfb;
-  --color-secondary: #0d1011;
-  --color-accent: #2e8cd6;
-  --color-gold: #D3AF37
-
+  --color-primary: #F9FAFB;
+  --color-secondary: #2D2D2D;
+  --color-accent: #B08968;
+  --color-accent-dark: #8B6F47;
+  --color-accent-light: #C9A87C;
+  --color-gold: #D4AF37;
+  --color-cream: #FFF8F0;
+  --color-sage: #9CA986;
 }
 
-    /* In your main CSS file, after @tailwind base; and before @tailwind components; */
+/* Base Styles */
+body {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
 
-    /* Customize the entire scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px; /* Or any desired width */
-    }
+/* Global Utilities */
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/20 transition-all hover:bg-accent-dark hover:-translate-y-1 hover:shadow-xl hover:shadow-accent/30 active:scale-[0.98];
+}
 
-    /* Customize the scrollbar track (background) */
-    ::-webkit-scrollbar-track {
-      background-color: transparent; /* Tailwind's gray-100 equivalent */
-      
-    }
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-secondary/10 bg-white px-6 py-3 text-sm font-semibold text-secondary shadow-sm transition-all hover:bg-gray-50 hover:border-secondary/20 hover:shadow-md active:scale-[0.98];
+}
 
-    /* Customize the scrollbar thumb (draggable part) */
-    ::-webkit-scrollbar-thumb {
-      background-color: #888; /* Tailwind's gray-500 equivalent */
-      border-radius: 4px;
-    }
+.input-field {
+  @apply w-full rounded-xl border border-secondary/15 bg-white px-4 py-3 text-secondary placeholder:text-secondary/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all;
+}
 
-    /* Optional: Hover state for the thumb */
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: #555; /* Tailwind's gray-700 equivalent */
-    }
+.glass-panel {
+  @apply rounded-2xl border border-white/20 bg-white/60 backdrop-blur-md shadow-sm;
+}
+
+/* Premium Gradients */
+.gradient-premium {
+  background: linear-gradient(135deg, #B08968 0%, #8B6F47 100%);
+}
+
+.gradient-soft {
+  background: linear-gradient(135deg, #FFF8F0 0%, #F9FAFB 100%);
+}
+
+.gradient-overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(176, 137, 104, 0.4) 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94A3B8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes subtleZoom {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-subtle-zoom {
+  animation: subtleZoom 20s alternate infinite;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}

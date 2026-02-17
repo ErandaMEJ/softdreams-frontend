@@ -3,11 +3,13 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Loader from "../components/loader";
 import ImageSlider from "../components/imageSlider";
-import { addToCart } from "../utils/cart";
-import { HiChevronRight } from "react-icons/hi";
+import { addToCart, getCart } from "../utils/cart";
+import { HiChevronRight, HiOutlineTruck, HiOutlineShieldCheck, HiOutlineSparkles } from "react-icons/hi";
 import ReviewsSection from "../components/reviewsSection";
 import StarRating from "../components/starRating";
-import { api } from "../utils/api"; 
+import ProductCard from "../components/productCard";
+import { api } from "../utils/api";
+import SocialShare from "../components/socialShare";
 
 export default function ProductOverview() {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ export default function ProductOverview() {
 
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading"); // "loading" | "success" | "error"
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   const loadProduct = useCallback(async () => {
     try {
@@ -33,29 +36,42 @@ export default function ProductOverview() {
     loadProduct();
   }, [loadProduct]);
 
+  useEffect(() => {
+    if (product?.category) {
+      api.get(`/products?category=${encodeURIComponent(product.category)}`)
+        .then((res) => {
+          const related = res.data
+            .filter((p) => p.productID !== product.productID)
+            .slice(0, 4);
+          setRelatedProducts(related);
+        })
+        .catch((err) => console.error("Failed to load related products", err));
+    }
+  }, [product]);
+
   if (status === "loading") return <Loader />;
 
   if (status === "error") {
     return (
-      <main className="w-full min-h-[calc(100vh-68px)] bg-primary px-4 py-10">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-secondary/10 bg-white/5 p-8 text-center">
-          <h1 className="text-2xl font-semibold text-secondary">Product not found</h1>
-          <p className="mt-2 text-sm text-secondary/70">
+      <main className="w-full min-h-[calc(100vh-68px)] bg-primary px-4 py-10 flex items-center justify-center">
+        <div className="mx-auto max-w-lg rounded-3xl border border-secondary/10 bg-white p-12 text-center shadow-xl">
+          <h1 className="text-3xl font-bold text-secondary mb-4">Product Not Found</h1>
+          <p className="text-secondary/60 mb-8">
             The product you’re looking for doesn’t exist or is unavailable.
           </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <div className="flex justify-center gap-4">
             <button
               onClick={loadProduct}
-              className="h-11 rounded-xl bg-secondary px-5 text-sm font-semibold text-white hover:bg-secondary/85 transition"
+              className="px-6 py-2 rounded-xl border border-secondary/20 hover:bg-secondary/5 transition font-semibold"
             >
               Retry
             </button>
             <Link
               to="/products"
-              className="h-11 rounded-xl border border-secondary/15 bg-white/5 px-5 text-sm font-semibold text-secondary flex items-center justify-center hover:bg-white/10 transition"
+              className="px-6 py-2 rounded-xl bg-accent text-white hover:bg-accent/90 transition font-semibold"
             >
-              Back to Products
+              Browse Products
             </Link>
           </div>
         </div>
@@ -68,100 +84,85 @@ export default function ProductOverview() {
   const primaryImage = safeImages?.[0];
 
   return (
-    <main className="w-full min-h-[calc(100vh-68px)] bg-primary">
-      {/* Top area */}
-      <section className="mx-auto max-w-7xl px-4 py-5 sm:py-7">
-        {/* Breadcrumb-ish */}
-        <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-secondary/60">
-          <Link to="/products" className="hover:text-secondary transition-colors">
-            Products
-          </Link>
-          <HiChevronRight className="opacity-70" />
-          <span className="text-secondary/80">{product?.category || "Category"}</span>
-        </div>
+    <main className="w-full min-h-screen bg-primary pb-8">
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Hero Section */}
+      <div className="relative w-full h-[250px] flex items-center justify-center bg-secondary overflow-hidden">
+        <img
+          src={primaryImage || "https://images.pexels.com/photos/1034584/pexels-photo-1034584.jpeg?auto=compress&cs=tinysrgb&w=1600"}
+          alt={product?.name}
+          className="absolute inset-0 w-full h-full object-cover opacity-50 blur-sm"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-primary" />
+
+        <div className="relative z-10 text-center px-4 mt-12 font-bold text-white drop-shadow-lg animate-fade-in-up">
+          <p className="text-accent text-xs md:text-sm uppercase tracking-widest mb-1">
+            {product?.category || "Premium Collection"}
+          </p>
+          <h1 className="text-2xl md:text-4xl line-clamp-2 max-w-4xl mx-auto">
+            {product?.name}
+          </h1>
+        </div>
+      </div>
+
+      {/* Top area */}
+      <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-secondary/50 mb-8">
+          <Link to="/" className="hover:text-accent transition">Home</Link>
+          <HiChevronRight />
+          <Link to="/products" className="hover:text-accent transition">Shop</Link>
+          <HiChevronRight />
+          <span className="text-secondary font-medium">{product?.name}</span>
+        </nav>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16">
           {/* Left: Images */}
-          <div className="rounded-2xl border border-secondary/10 bg-white/5 p-3 sm:p-4 shadow-sm">
-            
-            <div className="w-full h-[340px] sm:h-[460px] lg:h-[620px]">
+          <div className="w-full">
+            <div className="rounded-3xl border border-secondary/5 bg-white shadow-sm overflow-hidden h-[400px] sm:h-[500px] lg:h-[600px]">
               <ImageSlider images={safeImages} />
             </div>
           </div>
 
           {/* Right: Details */}
-          <div className="rounded-2xl border border-secondary/10 bg-white/5 p-5 sm:p-6 shadow-sm">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-secondary">
+          <div className="flex flex-col">
+            <h1 className="text-2xl sm:text-4xl font-bold text-secondary mb-2 tracking-tight">
               {product?.name}
             </h1>
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
-              <p className="text-sm text-secondary/60">{product?.productID}</p>
-
-              <div className="flex items-center gap-2">
-                <StarRating value={product?.rating ?? 0} />
-                <span className="text-sm text-secondary/70">
-                  ({product?.numReviews ?? 0})
-                </span>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-1">
+                <StarRating value={product?.rating ?? 0} size={18} />
               </div>
+              <span className="text-secondary/40 text-sm">|</span>
+              <span className="text-secondary/60 text-sm">{product?.numReviews ?? 0} Reviews</span>
+              <span className="text-secondary/40 text-sm">|</span>
+              <span className="text-accent font-medium text-sm">{product?.isAvailable ? "In Stock" : "Out of Stock"}</span>
             </div>
 
-            {/* Category + alt names */}
-            <div className="mt-6  flex flex-wrap gap-2 ">
-              {product?.category && (
-                <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1 text-xs font-semibold text-secondary/80">
-                  {product.category}
-                </span>
-              )}
-              {product?.brand && (
-                <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1 text-xs font-semibold text-secondary/80">
-                  {product.brand}
-                </span>
-              )}
-              {product?.model && (
-                <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1 text-xs font-semibold text-secondary/80">
-                  {product.model}
-                </span>
-              )}
-            </div>
-
-            {product?.altNames?.length > 0 && (
-              <p className="mt-6 text-sm  text-secondary/70">
-                Also known as: <span className="text-secondary/85">{product.altNames.join(" • ")}</span>
-              </p>
-            )}
-
-            {/* Description */}
-            <div className="mt-6 rounded-2xl border border-secondary/10 bg-primary/40 p-4">
-              <h2 className="text-sm font-semibold text-secondary">Description</h2>
-              <p className="mt-2 text-sm leading-relaxed text-secondary/80 whitespace-pre-wrap">
-                {product?.description}
-              </p>
-            </div>
-
-            {/* Price box */}
-            <div className="mt-6 rounded-2xl border border-secondary/10 bg-primary/40 p-4">
+            <div className="flex items-end gap-4 mb-8">
+              <span className="text-3xl sm:text-4xl font-bold text-secondary">
+                LKR. {Number(product?.price ?? 0).toLocaleString()}
+              </span>
               {Number(product?.labelledPrice) > Number(product?.price) && (
-                <p className="text-sm text-secondary/60 line-through decoration-gold/70 decoration-2">
-                  LKR. {Number(product.labelledPrice).toFixed(2)}
-                </p>
+                <span className="text-lg sm:text-xl text-secondary/40 line-through mb-1">
+                  LKR. {Number(product.labelledPrice).toLocaleString()}
+                </span>
               )}
-              <p className="mt-1 text-3xl font-semibold text-accent">
-                LKR. {Number(product?.price ?? 0).toFixed(2)}
-              </p>
-              <p className="mt-2 text-xs text-secondary/60">
-                {product?.isAvailable ? "In stock / Available" : "Currently unavailable"}
-              </p>
+            </div>
+
+            <div className="prose prose-sm text-secondary/70 mb-8 leading-relaxed">
+              <p>{product?.description}</p>
             </div>
 
             {/* Actions */}
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="flex flex-col sm:flex-row gap-4 mb-10">
               <button
                 onClick={() => {
                   addToCart(product, 1);
                   toast.success("Added to cart");
                 }}
-                className="h-12 rounded-2xl bg-secondary text-white font-semibold hover:bg-secondary/85 transition disabled:opacity-60"
+                className="flex-1 py-4 rounded-xl border border-secondary/10 bg-white text-secondary font-bold text-lg hover:bg-gray-50 hover:border-secondary/30 transition shadow-sm disabled:opacity-50"
                 disabled={!product?.isAvailable}
               >
                 Add to Cart
@@ -186,35 +187,49 @@ export default function ProductOverview() {
                     ],
                   });
                 }}
-                className="h-12 rounded-2xl bg-accent text-white font-semibold hover:bg-accent/85 transition disabled:opacity-60"
+                className="flex-1 py-4 rounded-xl bg-accent text-white font-bold text-lg hover:bg-accent/90 transition shadow-lg shadow-accent/25 disabled:opacity-50"
                 disabled={!product?.isAvailable}
               >
                 Buy Now
               </button>
             </div>
 
-            {/* Tiny reassurance row */}
-            <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-secondary/50">
-              <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1">
-                Genuine parts
-              </span>
-              <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1">
-                Local support
-              </span>
-              <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1">
-                Fast delivery
-              </span>
+            {/* Features/Trust */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-6 border-t border-secondary/10">
+              <div className="flex items-center gap-3 text-secondary/70">
+                <HiOutlineSparkles className="text-2xl text-accent" />
+                <span className="text-xs font-semibold uppercase tracking-wider">Premium Quality</span>
+              </div>
+              <div className="flex items-center gap-3 text-secondary/70">
+                <HiOutlineTruck className="text-2xl text-accent" />
+                <span className="text-xs font-semibold uppercase tracking-wider">Island-Wide Delivery</span>
+              </div>
+              <div className="flex items-center gap-3 text-secondary/70">
+                <HiOutlineShieldCheck className="text-2xl text-accent" />
+                <span className="text-xs font-semibold uppercase tracking-wider">Secure Payment</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Reviews */}
-      <section className="mx-auto max-w-7xl px-4 pb-10">
-        <div className="rounded-2xl border border-secondary/10 bg-white/5 p-5 sm:p-6 shadow-sm">
-          <ReviewsSection product={product} productID={params.productID} onRefresh={loadProduct} />
-        </div>
+      <section className="mx-auto max-w-7xl px-4 py-16 border-t border-secondary/5 mt-16">
+        <h2 className="text-2xl font-bold text-secondary mb-8">Customer Reviews</h2>
+        <ReviewsSection product={product} productID={params.productID} onRefresh={loadProduct} />
       </section>
+
+      {/* Related Products */}
+      {relatedProducts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-20">
+          <h2 className="text-2xl font-bold text-secondary mb-8">You might also like</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.productID} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

@@ -2,28 +2,29 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Loader from "../components/loader";
 import ViewOrderInfoCustomer from "../components/viewOrderInfoCustomer";
+import { HiOutlineCube, HiOutlineCalendar, HiOutlineCurrencyDollar } from "react-icons/hi";
 
 function getStatusBadgeClass(statusRaw) {
   const s = String(statusRaw || "").toLowerCase().trim();
 
-  let cls = "border-secondary/15 bg-primary/40 text-secondary/80";
+  let cls = "bg-gray-100 text-gray-700 border-gray-200";
 
   if (["pending", "awaiting", "unpaid"].includes(s)) {
-    cls = "border-yellow-500/30 bg-yellow-500/15 text-yellow-700";
+    cls = "bg-yellow-50 text-yellow-700 border-yellow-200";
   } else if (["processing", "confirmed"].includes(s)) {
-    cls = "border-sky-500/30 bg-sky-500/15 text-sky-700";
+    cls = "bg-blue-50 text-blue-700 border-blue-200";
   } else if (["cancel_requested", "cancel-requested", "cancel request"].includes(s)) {
-    cls = "border-orange-500/30 bg-orange-500/15 text-orange-700";
+    cls = "bg-orange-50 text-orange-700 border-orange-200";
   } else if (["delivered", "completed", "complete"].includes(s)) {
-    cls = "border-emerald-500/30 bg-emerald-500/15 text-emerald-700";
+    cls = "bg-green-50 text-green-700 border-green-200";
   } else if (["cancelled", "canceled", "rejected", "failed"].includes(s)) {
-    cls = "border-red-500/30 bg-red-500/15 text-red-700";
+    cls = "bg-red-50 text-red-700 border-red-200";
   }
 
   return cls;
 }
 
-export default function ordersPage() {
+export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -43,180 +44,122 @@ export default function ordersPage() {
   }, [loaded]);
 
   return (
-    <div className="w-full min-h-[calc(100vh-68px)] bg-primary text-secondary">
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-secondary">
-              My Orders
-            </h1>
-            <p className="text-sm text-secondary/60">
-              Track your order history and view details
-            </p>
-          </div>
+    <div className="w-full min-h-screen bg-primary">
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-secondary/10 bg-white/5 px-4 py-2 text-xs font-semibold text-secondary/70 w-fit">
-            Total: {orders.length}
+      {/* Hero Section */}
+      <div className="relative w-full h-[250px] flex items-center justify-center bg-secondary overflow-hidden">
+        <img
+          src="https://images.pexels.com/photos/4473388/pexels-photo-4473388.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Orders"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-primary" />
+
+        <div className="relative z-10 text-center px-4 mt-16 font-bold text-white drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl mb-2">My Orders</h1>
+          <p className="text-white/80 text-sm md:text-base font-normal">
+            Track and manage your recent purchases
+          </p>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+
+        {/* Stats Bar */}
+        <div className="flex justify-end mb-6">
+          <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 text-sm font-medium text-white shadow-sm flex items-center gap-2">
+            Total Orders: <span className="font-bold text-accent bg-white/10 px-2 rounded">{orders.length}</span>
           </div>
         </div>
 
-        {/* Loading */}
+        {/* Loading State */}
         {!loaded && (
-          <div className="rounded-2xl border border-secondary/10 bg-white/5 shadow-sm p-8">
+          <div className="flex justify-center py-20">
             <Loader />
           </div>
         )}
 
-        {/* Empty */}
+        {/* Empty State */}
         {loaded && orders.length === 0 && (
-          <div className="rounded-2xl border border-secondary/10 bg-white/5 shadow-sm p-10 text-center text-secondary/70">
-            No orders found.
+          <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-secondary/20">
+            <HiOutlineCube className="text-4xl text-secondary/20 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-secondary">No orders found</h3>
+            <p className="text-secondary/60 mt-2">You haven't placed any orders yet.</p>
           </div>
         )}
 
-        {/* ✅ Mobile Cards */}
+        {/* Orders List */}
         {loaded && orders.length > 0 && (
-          <div className="sm:hidden grid gap-4">
-            {orders.map((order, index) => {
-              const badgeClass = getStatusBadgeClass(order.status);
+          <div className="space-y-6">
 
-              return (
-                <div
-                  key={index}
-                  className="rounded-2xl border border-secondary/10 bg-white/5 shadow-sm p-5"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-xs text-secondary/60">Order ID</p>
-                      <p className="font-semibold text-secondary break-all">
-                        {order.orderId}
-                      </p>
-                      <p className="mt-1 text-xs text-secondary/60">
-                        {new Date(order.date).toLocaleDateString()}
-                      </p>
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-hidden rounded-2xl border border-secondary/10 bg-white shadow-sm">
+              <table className="w-full text-left text-sm text-secondary/80">
+                <thead className="bg-gray-50 text-secondary/70 uppercase tracking-wider text-xs">
+                  <tr>
+                    <th className="px-6 py-4 font-semibold">Order ID</th>
+                    <th className="px-6 py-4 font-semibold">Date</th>
+                    <th className="px-6 py-4 font-semibold">Status</th>
+                    <th className="px-6 py-4 font-semibold text-right">Total</th>
+                    <th className="px-6 py-4 font-semibold text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {orders.map((order) => (
+                    <tr key={order.orderId} className="hover:bg-gray-50/50 transition">
+                      <td className="px-6 py-4 font-medium text-secondary">#{order.orderId}</td>
+                      <td className="px-6 py-4">{new Date(order.date).toLocaleDateString()}</td>
+                      <td className="px-6 py-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadgeClass(order.status)}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right font-medium text-secondary">LKR. {order.total.toLocaleString()}</td>
+                      <td className="px-6 py-4 text-center">
+                        <ViewOrderInfoCustomer order={order} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="sm:hidden space-y-4">
+              {orders.map((order) => (
+                <div key={order.orderId} className="bg-white rounded-2xl p-5 border border-secondary/10 shadow-sm">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <span className="text-xs text-secondary/50 font-medium">Order ID</span>
+                      <h3 className="text-base font-bold text-secondary">#{order.orderId}</h3>
                     </div>
-
-                    <span
-                      className={[
-                        "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold shrink-0",
-                        badgeClass,
-                      ].join(" ")}
-                    >
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadgeClass(order.status)}`}>
                       {order.status}
                     </span>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-1 gap-2 text-sm">
-                    <div className="flex justify-between gap-3">
-                      <span className="text-secondary/60">Email</span>
-                      <span className="text-secondary/85 break-all text-right">
-                        {order.email}
+                  <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+                    <div className="flex flex-col">
+                      <span className="flex items-center gap-1 text-xs text-secondary/50 mb-1">
+                        <HiOutlineCalendar /> Date
                       </span>
+                      <span className="text-secondary">{new Date(order.date).toLocaleDateString()}</span>
                     </div>
-
-                    <div className="flex justify-between gap-3">
-                      <span className="text-secondary/60">Name</span>
-                      <span className="text-secondary/85 text-right">
-                        {order.name}
+                    <div className="flex flex-col">
+                      <span className="flex items-center gap-1 text-xs text-secondary/50 mb-1">
+                        <HiOutlineCurrencyDollar /> Total
                       </span>
-                    </div>
-
-                    <div className="flex justify-between gap-3">
-                      <span className="text-secondary/60">Total</span>
-                      <span className="text-accent font-semibold text-right">
-                        LKR. {order.total.toFixed(2)}
-                      </span>
+                      <span className="text-accent font-bold">LKR. {order.total.toLocaleString()}</span>
                     </div>
                   </div>
 
-                  <div className="mt-4 flex justify-end">
+                  <div className="pt-4 border-t border-gray-100 flex justify-end">
                     <ViewOrderInfoCustomer order={order} />
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* ✅ Desktop Table */}
-        {loaded && orders.length > 0 && (
-          <div className="hidden sm:block rounded-2xl border border-secondary/10 bg-white/5 shadow-sm overflow-hidden">
-            {/* Top bar */}
-            <div className="px-4 py-4 border-b border-secondary/10 bg-primary/40">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-secondary">
-                  Orders Table
-                </p>
-                <p className="text-xs text-secondary/60">
-                  Latest updates shown here
-                </p>
-              </div>
+              ))}
             </div>
 
-            <div className="w-full overflow-x-auto">
-              <table className="w-full min-w-[980px] text-sm">
-                <thead className="sticky top-0 z-10 bg-accent text-white">
-                  <tr className="text-xs uppercase tracking-wide">
-                    <th className="py-3 px-4 text-left">Order ID</th>
-                    <th className="py-3 px-4 text-left">Customer Email</th>
-                    <th className="py-3 px-4 text-left">Customer Name</th>
-                    <th className="py-3 px-4 text-left">Order Date</th>
-                    <th className="py-3 px-4 text-left">Status</th>
-                    <th className="py-3 px-4 text-right">Total</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-secondary/10">
-                  {orders.map((order, index) => {
-                    const badgeClass = getStatusBadgeClass(order.status);
-
-                    return (
-                      <tr
-                        key={index}
-                        className="hover:bg-white/5 transition-colors"
-                      >
-                        <td className="py-4 px-4 font-semibold text-secondary whitespace-nowrap">
-                          {order.orderId}
-                        </td>
-
-                        <td className="py-4 px-4 text-secondary/80 break-all">
-                          {order.email}
-                        </td>
-
-                        <td className="py-4 px-4 text-secondary/80">
-                          {order.name}
-                        </td>
-
-                        <td className="py-4 px-4 text-secondary/70 whitespace-nowrap">
-                          {new Date(order.date).toLocaleDateString()}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <span
-                            className={[
-                              "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold",
-                              badgeClass,
-                            ].join(" ")}
-                          >
-                            {order.status}
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-4 text-right font-semibold text-accent whitespace-nowrap">
-                          LKR. {order.total.toFixed(2)}
-                        </td>
-
-                        <td className="py-4 px-4 text-center">
-                          <ViewOrderInfoCustomer order={order} />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
           </div>
         )}
       </div>

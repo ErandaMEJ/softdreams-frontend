@@ -1,38 +1,30 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { HiOutlinePencil, HiOutlineCloudUpload } from "react-icons/hi";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { HiOutlinePlus, HiOutlineCloudUpload } from "react-icons/hi";
+import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../utils/mediaUpload";
 
-export default function AdminUpdateProductPage() {
-    const location = useLocation();
+export default function AdminAddProductPage() {
+    const [productID, setProductID] = useState("");
+    const [name, setName] = useState("");
+    const [altNames, setAltNames] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState(0);
+    const [labelledPrice, setLabelledPrice] = useState(0);
+    const [files, setFiles] = useState([]);
+    const [category, setCategory] = useState("Bedsheets");
+    const [brand, setBrand] = useState("");
+    const [model, setModel] = useState("");
+    const [stock, setStock] = useState(0);
+    const [isAvailable, setIsAvailable] = useState(true);
+    const [uploading, setUploading] = useState(false);
     const navigate = useNavigate();
 
-    // Redirect if no state
-    if (!location.state) {
-        window.location.href = "/admin/products";
-        return null;
-    }
-
-    const [productID, setProductID] = useState(location.state.productID);
-    const [name, setName] = useState(location.state.name);
-    const [altNames, setAltNames] = useState(location.state.altNames.join(", "));
-    const [description, setDescription] = useState(location.state.description);
-    const [price, setPrice] = useState(location.state.price);
-    const [labelledPrice, setLabelledPrice] = useState(location.state.labelledPrice);
-    const [files, setFiles] = useState([]);
-    const [category, setCategory] = useState(location.state.category);
-    const [brand, setBrand] = useState(location.state.brand);
-    const [model, setModel] = useState(location.state.model);
-    const [stock, setStock] = useState(location.state.stock);
-    const [isAvailable, setIsAvailable] = useState(location.state.isAvailable);
-    const [uploading, setUploading] = useState(false);
-
-    async function updateProduct() {
+    async function addProduct() {
         const token = localStorage.getItem("token");
         if (!token) {
-            toast.error("You must be logged in as an admin to update products.");
+            toast.error("You must be logged in as an admin.");
             navigate("/login");
             return;
         }
@@ -43,28 +35,18 @@ export default function AdminUpdateProductPage() {
         }
 
         setUploading(true);
-        let images = location.state.images;
+        const imagePromises = [];
 
-        if (files.length > 0) {
-            const imagePromises = [];
-            for (let i = 0; i < files.length; i++) {
-                imagePromises.push(uploadFile(files[i]));
-            }
-            try {
-                const newImages = await Promise.all(imagePromises);
-                images = newImages; // Replace images if new ones uploaded, or could append. Assuming replace for now as per original logic implies
-            } catch (err) {
-                toast.error("Error uploading images.");
-                console.error(err);
-                setUploading(false);
-                return;
-            }
+        for (let i = 0; i < files.length; i++) {
+            imagePromises.push(uploadFile(files[i]));
         }
 
         try {
+            const images = await Promise.all(imagePromises);
             const altNamesArray = altNames.split(",").map(s => s.trim()).filter(s => s);
 
-            await axios.put(import.meta.env.VITE_BACKEND_URL + "/products/" + productID, {
+            await axios.post(import.meta.env.VITE_BACKEND_URL + "/products/", {
+                productID,
                 name,
                 altNames: altNamesArray,
                 description,
@@ -80,10 +62,11 @@ export default function AdminUpdateProductPage() {
                 headers: { Authorization: "Bearer " + token }
             });
 
-            toast.success("Product Updated successfully!");
+            toast.success("Product added successfully!");
             navigate("/admin/products");
+
         } catch (err) {
-            toast.error("Error updating product. Please try again.");
+            toast.error("Error adding product. Please try again.");
             console.error(err);
         } finally {
             setUploading(false);
@@ -96,31 +79,32 @@ export default function AdminUpdateProductPage() {
     return (
         <div className="w-full h-full flex flex-col items-center justify-center p-4 sm:p-10">
             <h1 className="text-3xl font-bold text-secondary mb-8 flex items-center gap-3">
-                <span className="p-2 bg-accent/10 rounded-xl text-accent"><HiOutlinePencil /></span>
-                Update Product
+                <span className="p-2 bg-accent/10 rounded-xl text-accent"><HiOutlinePlus /></span>
+                Add New Product
             </h1>
 
             <div className="w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-white/50 p-6 sm:p-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <div>
-                        <label className={labelClass}>Product ID (Read Only)</label>
-                        <input type="text" value={productID} disabled className={`${inputClass} bg-gray-100 cursor-not-allowed text-secondary/50`} />
+                        <label className={labelClass}>Product ID</label>
+                        <input type="text" value={productID} onChange={(e) => setProductID(e.target.value)} className={inputClass} placeholder="e.g., P-001" />
+                        <p className="text-xs text-secondary/50 mt-1">Must be unique.</p>
                     </div>
 
                     <div>
                         <label className={labelClass}>Product Name</label>
-                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
+                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g., Luxury Cotton Sheet" />
                     </div>
 
                     <div className="md:col-span-2">
                         <label className={labelClass}>Alternative Names (Comma separated)</label>
-                        <input type="text" value={altNames} onChange={(e) => setAltNames(e.target.value)} className={inputClass} />
+                        <input type="text" value={altNames} onChange={(e) => setAltNames(e.target.value)} className={inputClass} placeholder="e.g., bedsheet, sheet, cotton sheet" />
                     </div>
 
                     <div className="md:col-span-2">
                         <label className={labelClass}>Description</label>
-                        <textarea rows="4" value={description} onChange={(e) => setDescription(e.target.value)} className={inputClass} />
+                        <textarea rows="4" value={description} onChange={(e) => setDescription(e.target.value)} className={inputClass} placeholder="Detailed product description..." />
                     </div>
 
                     <div>
@@ -134,18 +118,11 @@ export default function AdminUpdateProductPage() {
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className={labelClass}>Update Images (Leave empty to keep existing)</label>
-
-                        <div className="flex gap-4 mb-4 overflow-x-auto py-2">
-                            {location.state.images.map((img, idx) => (
-                                <img key={idx} src={img} alt="Current" className="w-20 h-20 object-cover rounded-lg border border-secondary/10" />
-                            ))}
-                        </div>
-
+                        <label className={labelClass}>Product Images</label>
                         <div className="relative border-2 border-dashed border-secondary/20 rounded-xl p-8 hover:bg-secondary/5 transition text-center cursor-pointer">
                             <input type="file" multiple onChange={(e) => setFiles(e.target.files)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                             <HiOutlineCloudUpload className="mx-auto text-4xl text-secondary/30 mb-2" />
-                            <p className="text-secondary/60 text-sm">{files.length > 0 ? `${files.length} new files selected` : "Drag & drop or click to replace images"}</p>
+                            <p className="text-secondary/60 text-sm">{files.length > 0 ? `${files.length} files selected` : "Drag & drop or click to upload images"}</p>
                         </div>
                     </div>
 
@@ -167,12 +144,12 @@ export default function AdminUpdateProductPage() {
 
                     <div>
                         <label className={labelClass}>Brand</label>
-                        <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} className={inputClass} />
+                        <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} className={inputClass} placeholder="e.g., SoftDreams" />
                     </div>
 
                     <div>
                         <label className={labelClass}>Model</label>
-                        <input type="text" value={model} onChange={(e) => setModel(e.target.value)} className={inputClass} />
+                        <input type="text" value={model} onChange={(e) => setModel(e.target.value)} className={inputClass} placeholder="e.g., SD-2024" />
                     </div>
 
                     <div>
@@ -195,13 +172,14 @@ export default function AdminUpdateProductPage() {
                         Cancel
                     </Link>
                     <button
-                        onClick={updateProduct}
+                        onClick={addProduct}
                         disabled={uploading}
                         className="flex-1 py-3 rounded-xl bg-accent text-white font-bold hover:bg-accent/90 shadow-lg shadow-accent/20 hover:-translate-y-0.5 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {uploading ? "Updating..." : "Update Product"}
+                        {uploading ? "Uploading..." : "Add Product"}
                     </button>
                 </div>
+
             </div>
         </div>
     )

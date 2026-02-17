@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { HiOutlineLockClosed, HiOutlineShieldCheck, HiOutlineTruck } from "react-icons/hi";
 
 export default function CheckoutPage() {
   const location = useLocation();
@@ -10,18 +11,21 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [cart, setCart] = useState(location.state);
+  const [loading, setLoading] = useState(false);
 
-  // ✅ Trending mini section state
+  // Trending mini section state
   const [trending, setTrending] = useState([]);
-  const [trendingStatus, setTrendingStatus] = useState("idle"); // idle | loading | success | error
+  const [trendingStatus, setTrendingStatus] = useState("idle");
 
-  if (location.state == null) {
-    navigate("/products");
-  }
+  useEffect(() => {
+    if (location.state == null) {
+      navigate("/products");
+    }
+  }, [location.state, navigate]);
 
   const isEmptyCart = !cart || cart.length === 0;
 
-  // ✅ Load trending products only when cart is empty
+  // Load trending products only when cart is empty
   useEffect(() => {
     if (!isEmptyCart) return;
     if (trendingStatus !== "idle") return;
@@ -40,116 +44,25 @@ export default function CheckoutPage() {
       });
   }, [isEmptyCart, trendingStatus]);
 
-  // ✅ Empty cart state
   if (isEmptyCart) {
     return (
-      <div className="w-full min-h-[calc(100vh-68px)] bg-primary">
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <div className="rounded-2xl border border-secondary/10 bg-white/5 p-8 sm:p-10 text-center shadow-sm">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-secondary">
-              Your cart is empty
-            </h1>
-            <p className="mt-2 text-sm text-secondary/70">
-              Add some products to continue checkout.
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Link
-                to="/products"
-                className="h-12 px-6 rounded-2xl bg-accent text-white font-semibold flex items-center justify-center hover:bg-accent/85 transition"
-              >
-                Browse Products
-              </Link>
-
-              <Link
-                to="/cart"
-                className="h-12 px-6 rounded-2xl border border-secondary/15 bg-white/5 text-secondary font-semibold flex items-center justify-center hover:bg-white/10 transition"
-              >
-                Go to Cart
-              </Link>
-            </div>
-          </div>
-
-          {/* Trending products mini section */}
-          <div className="mt-10">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-semibold text-secondary">
-                  Trending Products
-                </h2>
-                <p className="text-sm text-secondary/60">
-                  Popular picks you might like
-                </p>
-              </div>
-
-              <Link
-                to="/products"
-                className="text-sm font-semibold text-accent hover:text-accent/80 transition"
-              >
-                View all →
-              </Link>
-            </div>
-
-            <div className="mt-5">
-              {trendingStatus === "loading" && (
-                <div className="rounded-2xl border border-secondary/10 bg-white/5 p-6 text-secondary/70">
-                  Loading trending products...
-                </div>
-              )}
-
-              {trendingStatus === "error" && (
-                <div className="rounded-2xl border border-secondary/10 bg-white/5 p-6 text-secondary/70">
-                  Couldn’t load trending products right now.
-                </div>
-              )}
-
-              {trendingStatus === "success" && trending.length === 0 && (
-                <div className="rounded-2xl border border-secondary/10 bg-white/5 p-6 text-secondary/70">
-                  No products available.
-                </div>
-              )}
-
-              {trendingStatus === "success" && trending.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {trending.map((p) => (
-                    <Link
-                      key={p.productID}
-                      to={`/overview/${p.productID}`}
-                      className="group rounded-2xl border border-secondary/10 bg-white/5 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary/20 transition"
-                    >
-                      <div className="w-full aspect-square bg-black/5 overflow-hidden">
-                        <img
-                          src={p?.images?.[0] || "/placeholder.png"}
-                          alt={p?.name || "Product"}
-                          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                        />
-                      </div>
-
-                      <div className="p-3">
-                        <p className="text-sm font-semibold text-secondary line-clamp-2 min-h-[40px]">
-                          {p?.name}
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-accent">
-                          LKR. {Number(p?.price ?? 0).toFixed(2)}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+      <div className="w-full min-h-[calc(100vh-68px)] bg-primary py-16 px-4">
+        <div className="mx-auto max-w-lg text-center">
+          <h1 className="text-3xl font-bold text-secondary mb-4">Your cart is empty</h1>
+          <p className="text-secondary/60 mb-8">Add top-quality bedding to your cart to proceed.</p>
+          <Link
+            to="/products"
+            className="btn-primary"
+          >
+            Browse Collection
+          </Link>
         </div>
       </div>
     );
   }
 
   function getCartTotal() {
-    let total = 0;
-    cart.forEach((item) => {
-      total += item.price * item.quantity;
-    });
-    return total;
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   }
 
   function submitOrder() {
@@ -161,218 +74,188 @@ export default function CheckoutPage() {
       return;
     }
 
-    const orderItems = [];
-    cart.forEach((item) => {
-      orderItems.push({
-        productID: item.productID,
-        quantity: item.quantity,
-      });
-    });
+    if (!name || !address || !phone) {
+      toast.error("Please fill in all shipping details.");
+      return;
+    }
 
-    axios
-      .post(
-        import.meta.env.VITE_BACKEND_URL + "/orders",
-        {
-          name: name,
-          address: address,
-          phone: phone,
-          items: orderItems,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    setLoading(true);
+
+    const orderItems = cart.map(item => ({
+      productID: item.productID,
+      quantity: item.quantity,
+    }));
+
+    axios.post(
+      import.meta.env.VITE_BACKEND_URL + "/orders",
+      {
+        name: name,
+        address: address,
+        phone: phone,
+        items: orderItems,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
       .then(() => {
-        toast.success("Order placed successfully");
+        toast.success("Order placed successfully!");
         navigate("/orders");
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         toast.error("Error placing order. Please try again.");
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   return (
-    <div className="w-full min-h-[calc(100vh-68px)] bg-primary">
-      <div className="mx-auto max-w-5xl px-4 py-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-secondary">
-              Checkout
-            </h1>
-            <p className="text-sm text-secondary/60">
-              Review your items and place the order
-            </p>
-          </div>
+    <div className="w-full min-h-screen bg-primary">
 
-          <Link
-            to="/cart"
-            className="inline-flex items-center justify-center h-10 px-4 rounded-xl border border-secondary/15 bg-white/5 text-sm font-semibold text-secondary hover:bg-white/10 transition w-fit"
-          >
-            Back to Cart
-          </Link>
+      {/* Hero Section with Shaded Gradient */}
+      <div className="relative w-full h-[250px] flex items-center justify-center bg-secondary overflow-hidden">
+        <img
+          src="https://images.pexels.com/photos/1034584/pexels-photo-1034584.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Checkout"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-primary" />
+
+        <div className="relative z-10 text-center px-4 mt-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-2">
+            Secure Checkout
+          </h1>
+          <p className="text-white/80 text-sm md:text-base flex items-center justify-center gap-2">
+            <HiOutlineLockClosed className="text-accent" /> Encrypted & Safe Transaction
+          </p>
         </div>
+      </div>
 
-        {/* Cart Items */}
-        <div className="grid gap-4">
-          {cart.map((item, index) => {
-            return (
-              <div
-                key={index}
-                className="w-full rounded-2xl border border-secondary/10 bg-white/5 shadow-sm hover:shadow-md transition overflow-hidden"
-              >
-                <div className="p-4 sm:p-5 flex gap-4">
-                  {/* Image */}
-                  <img
-                    src={item.image}
-                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover border border-secondary/10 bg-white"
-                    alt={item.name}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+          {/* Left Column - Shipping Details */}
+          <div className="lg:col-span-2 space-y-8">
+
+            {/* Shipping Form */}
+            <div className="glass-panel p-6 sm:p-8 bg-white shadow-sm border border-secondary/5 rounded-2xl">
+              <h2 className="text-xl font-semibold text-secondary mb-6 flex items-center gap-2">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm">1</span>
+                Shipping Information
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-secondary mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="input-field"
+                    placeholder="e.g. John Doe"
                   />
+                </div>
 
-                  {/* Details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h2 className="text-base sm:text-lg font-semibold text-secondary truncate">
-                          {item.name}
-                        </h2>
-                        <p className="text-xs sm:text-sm text-secondary/60 mt-1">
-                          {item.productID}
-                        </p>
-                      </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="input-field"
+                    placeholder="+94 7X XXX XXXX"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">City</label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder="Colombo"
+                  />
+                </div>
 
-                      <div className="text-right shrink-0">
-                        {item.labelledPrice > item.price && (
-                          <p className="text-xs sm:text-sm text-secondary/60 line-through decoration-gold/70 decoration-2">
-                            LKR. {item.labelledPrice.toFixed(2)}
-                          </p>
-                        )}
-                        <p className="text-sm sm:text-lg font-semibold text-accent">
-                          LKR. {item.price.toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* ✅ +/- Stepper + Line total */}
-                    <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="inline-flex items-center rounded-2xl border border-secondary/15 bg-primary/40 overflow-hidden">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const copiedCart = [...cart];
-                            copiedCart[index].quantity -= 1;
-                            if (copiedCart[index].quantity < 1) {
-                              copiedCart.splice(index, 1);
-                            }
-                            setCart(copiedCart);
-                          }}
-                          className="w-11 h-11 flex items-center justify-center text-xl font-bold text-secondary hover:bg-white/10 transition select-none"
-                          aria-label="Decrease quantity"
-                        >
-                          −
-                        </button>
-
-                        <div className="min-w-[52px] h-11 flex items-center justify-center text-sm font-semibold text-secondary border-x border-secondary/15">
-                          {item.quantity}
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const copiedCart = [...cart];
-                            copiedCart[index].quantity += 1;
-                            setCart(copiedCart);
-                          }}
-                          className="w-11 h-11 flex items-center justify-center text-xl font-bold text-secondary hover:bg-white/10 transition select-none"
-                          aria-label="Increase quantity"
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs text-secondary/60">Subtotal</p>
-                        <p className="text-base sm:text-lg font-semibold text-secondary">
-                          LKR. {(item.price * item.quantity).toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-secondary mb-1">Shipping Address</label>
+                  <textarea
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="input-field min-h-[100px]"
+                    placeholder="House no, Street name, Area"
+                  />
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Shipping / Customer Details */}
-        <div className="mt-6 rounded-2xl border border-secondary/10 bg-white/5 shadow-sm p-5 sm:p-6">
-          <h2 className="text-lg font-semibold text-secondary">Customer Details</h2>
-          <p className="text-sm text-secondary/60 mt-1">
-            Please enter your delivery information.
-          </p>
-
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col">
-              <label className="text-xs font-semibold text-secondary/70 mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="px-4 py-3 rounded-xl border border-secondary/15 bg-primary/40 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition"
-                placeholder="Your full name"
-              />
             </div>
 
-            <div className="flex flex-col">
-              <label className="text-xs font-semibold text-secondary/70 mb-2">
-                Phone
-              </label>
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="px-4 py-3 rounded-xl border border-secondary/15 bg-primary/40 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition"
-                placeholder="+94 7X XXX XXXX"
-              />
+            {/* Review Items */}
+            <div className="glass-panel p-6 sm:p-8 bg-white shadow-sm border border-secondary/5 rounded-2xl">
+              <h2 className="text-xl font-semibold text-secondary mb-6 flex items-center gap-2">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary text-white text-sm">2</span>
+                Review Items
+              </h2>
+              <div className="space-y-4">
+                {cart.map((item, index) => (
+                  <div key={index} className="flex gap-4 items-center py-4 border-b border-dashed border-secondary/10 last:border-0 last:pb-0">
+                    <img src={item.image} alt={item.name} className="w-16 h-16 rounded-lg object-cover bg-gray-50 border border-secondary/10" />
+                    <div className="flex-1">
+                      <h3 className="text-sm font-semibold text-secondary">{item.name}</h3>
+                      <p className="text-xs text-secondary/60">Qty: {item.quantity}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-secondary">Rs. {(item.price * item.quantity).toLocaleString()}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="flex flex-col md:col-span-2">
-              <label className="text-xs font-semibold text-secondary/70 mb-2">
-                Address
-              </label>
-              <textarea
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="px-4 py-3 rounded-xl border border-secondary/15 bg-primary/40 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition min-h-[110px]"
-                placeholder="House no, street, city..."
-              />
+          </div>
+
+          {/* Right Column - Summary */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl border border-secondary/5 shadow-sm p-6 sticky top-24">
+              <h2 className="text-xl font-bold text-secondary mb-6">Order Summary</h2>
+
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-secondary/70">
+                  <span>Subtotal</span>
+                  <span>Rs. {getCartTotal().toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-secondary/70">
+                  <span>Delivery</span>
+                  <span>Calculated later</span>
+                </div>
+              </div>
+
+              <div className="border-t border-dashed border-secondary/10 pt-4 mb-8">
+                <div className="flex justify-between items-end">
+                  <span className="font-bold text-secondary">Total</span>
+                  <span className="text-2xl font-bold text-accent">Rs. {getCartTotal().toLocaleString()}</span>
+                </div>
+                <p className="text-xs text-secondary/40 mt-1 text-right">Includes applicable taxes</p>
+              </div>
+
+              <button
+                onClick={submitOrder}
+                disabled={loading}
+                className="w-full py-4 rounded-xl bg-accent text-white font-bold text-lg shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-1 transition-all disabled:opacity-70 disabled:hover:translate-y-0"
+              >
+                {loading ? "Processing..." : "Place Order"}
+              </button>
+
+              <div className="mt-6 flex flex-col gap-3 text-xs text-secondary/50">
+                <div className="flex items-center gap-2">
+                  <HiOutlineShieldCheck className="text-lg text-accent" />
+                  <span>Secure encrypted payment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <HiOutlineTruck className="text-lg text-accent" />
+                  <span>Fast island-wide delivery</span>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
 
-        {/* Summary + Order */}
-        <div className="mt-6 rounded-2xl border border-secondary/10 bg-white/5 shadow-sm p-5 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <p className="text-xs text-secondary/60">Total</p>
-              <p className="text-2xl font-semibold text-accent">
-                LKR. {getCartTotal().toFixed(2)}
-              </p>
-              <p className="text-xs text-secondary/60 mt-1">
-                Delivery charges (if any) will be confirmed after review.
-              </p>
-            </div>
-
-            <button
-              onClick={submitOrder}
-              className="h-12 w-full sm:w-auto px-8 rounded-2xl bg-accent text-white font-semibold hover:bg-accent/85 transition shadow-sm active:scale-[0.99]"
-            >
-              Order Now
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import RevealOnScroll from "../components/RevealOnScroll";
+import NewsletterPopup from "../components/newsletterPopup";
+import TestimonialsCarousel from "../components/testimonialsCarousel";
 
 export default function Home() {
   const slogans = useMemo(
     () => [
-      "Your one-stop solution for all your computing needs.",
-      "Gaming rigs. Workstations. Everyday PCs.",
-      "Best performance. Best value. Reliable local support.",
-      "Build it. Fix it. Boost it — Eranda Computers.",
+      "Experience the luxury of sleep.",
+      "Premium 100% Cotton Bedding.",
+      "Soft. Breathable. Durable.",
+      "Transform your bedroom into a sanctuary.",
     ],
     []
   );
@@ -24,216 +27,215 @@ export default function Home() {
   return (
     <main className="w-full">
       {/* HERO */}
+
+
+      {/* RE-DOING HERO SECTION TO BE SIMPLE RELATIVE FOR NOW TO FIX THE ISSUE. 
+         The user said "split into two". The previous height calculation might be the cause.
+         I will use h-screen and a nice gradient overlap.
+      */}
+
       <section
         className="
           relative w-full
-          min-h-[calc(100vh-76px)]
-          bg-[url('/home.jpg')] bg-cover bg-center
+          min-h-screen
+          flex text-center items-center justify-center
+          overflow-hidden
         "
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
+        <div
+          className="
+            absolute inset-0 
+            bg-[url('https://images.pexels.com/photos/1034584/pexels-photo-1034584.jpeg?auto=compress&cs=tinysrgb&w=2000')] 
+            bg-cover bg-center 
+            animate-subtle-zoom
+          "
+        />
 
-        <div className="relative mx-auto flex w-full max-w-7xl flex-col justify-center px-4 py-10 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-primary/90" />
+
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-10 sm:px-6 lg:px-8 z-10 text-center pt-24">
           {/* Badge */}
-          <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/80 backdrop-blur">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            Trusted Computer Shop • Sales • Repairs • Upgrades
+          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium text-white backdrop-blur-md animate-fade-in-up shadow-lg">
+            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+            Premium Bedding Collection
           </div>
 
           {/* Title */}
-          <h1 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            SL Technologies
-            <span className="block text-white/80">
-              Modern PCs, parts, and expert support.
-            </span>
+          <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-8xl animate-fade-in-up delay-100 drop-shadow-lg mb-6">
+            SoftDreams
           </h1>
 
-          {/* Animated slogan */}
-          <div className="mt-4 max-w-2xl">
-            <p className="text-base leading-relaxed text-white/80 sm:text-lg">
-              <span className="mr-2 text-white/60">Slogan:</span>
-              <span
-                key={index}
-                className="inline-block animate-[fadeUp_450ms_ease-out] font-medium text-white"
-              >
-                {slogans[index]}
-              </span>
-            </p>
-
-            <div className="mt-3 flex items-center gap-2">
-              {slogans.map((_, i) => (
-                <span
-                  key={i}
-                  className={[
-                    "h-1.5 w-6 rounded-full transition-all duration-300",
-                    i === index ? "bg-emerald-400" : "bg-white/20",
-                  ].join(" ")}
-                />
-              ))}
-            </div>
-          </div>
+          <p className="max-w-2xl text-lg sm:text-xl text-white/90 font-light animate-fade-in-up delay-200 mb-8 leading-relaxed drop-shadow-md">
+            Experience the ultimate luxury of our 100% Egyptian Cotton bedding.
+            <span className="block mt-2 font-medium opacity-90">Sleep better. Live better.</span>
+          </p>
 
           {/* CTA buttons */}
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center animate-fade-in-up delay-300">
             <Link
               to="/products"
               className="
-                inline-flex items-center justify-center rounded-xl
-                bg-emerald-500 px-5 py-3 text-sm font-semibold text-black
-                shadow-lg shadow-emerald-500/20
-                transition hover:bg-emerald-400 active:scale-[0.99]
+                inline-flex items-center justify-center rounded-full
+                bg-white px-8 py-4 text-base font-bold text-secondary
+                shadow-xl shadow-white/20
+                transition hover:bg-gray-100 hover:-translate-y-1 active:scale-[0.99]
               "
             >
-              Shop Products
+              Shop Now
             </Link>
 
             <Link
               to="/contact"
               className="
-                inline-flex items-center justify-center rounded-xl
-                border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white
-                backdrop-blur transition
-                hover:bg-white/10 active:scale-[0.99]
+                inline-flex items-center justify-center rounded-full
+                border border-white/40 bg-black/20 px-8 py-4 text-base font-bold text-white
+                backdrop-blur-sm transition
+                hover:bg-black/40 hover:border-white hover:-translate-y-1 active:scale-[0.99]
               "
             >
-              Get a Quote / Contact
+              Contact Us
             </Link>
           </div>
-
-          {/* NEW: Quick stats (details) */}
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
-            {[
-              { k: "Fast Service", v: "Quick diagnostics & clear pricing" },
-              { k: "Quality Builds", v: "Budget to high-end configurations" },
-              { k: "After-Sales", v: "Friendly support & guidance" },
-            ].map((s) => (
-              <div
-                key={s.k}
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
-              >
-                <p className="text-sm font-semibold text-white">{s.k}</p>
-                <p className="mt-1 text-sm text-white/70">{s.v}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Quick highlights */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {[
-              { title: "Custom Builds", desc: "Gaming & productivity PCs tailored to your budget." },
-              { title: "Repairs & Upgrades", desc: "Fast diagnostics, SSD/RAM upgrades, cleaning." },
-              { title: "Genuine Parts", desc: "GPUs, CPUs, monitors, accessories & more." },
-            ].map((card) => (
-              <div
-                key={card.title}
-                className="
-                  rounded-2xl border border-white/10 bg-white/5 p-5
-                  backdrop-blur
-                  transition hover:bg-white/10
-                "
-              >
-                <h3 className="text-base font-semibold text-white">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">{card.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
-
-        {/* Decorative bottom fade (slightly smaller to reduce “gap feeling”) */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/70 to-transparent" />
       </section>
 
       {/* CONTENT SECTIONS */}
-      <section className="bg-zinc-950">
-        <div className="mx-auto max-w-7xl px-4 py-9 sm:px-6 lg:px-8">
-          {/* Category cards */}
-          <div className="grid gap-4 md:grid-cols-3">
+      <section className="bg-primary relative z-10 -mt-24 pb-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Quick stats floating cards */}
+          <div className="grid gap-4 sm:grid-cols-3 mb-16 transform -translate-y-8">
             {[
-              { title: "Laptops & Desktops", desc: "Everyday machines to premium performance." },
-              { title: "Gaming Gear", desc: "GPUs, monitors, keyboards, headsets." },
-              { title: "Office & Networking", desc: "Routers, printers, UPS, accessories." },
-            ].map((c) => (
+              { k: "100% Organic", v: "Certified Cotton", i: "🌿" },
+              { k: "Island-wide", v: "Fast Delivery", i: "🚚" },
+              { k: "5-Star Comfort", v: "Guaranteed", i: "⭐" },
+            ].map((s) => (
               <div
-                key={c.title}
-                className="
-                  group rounded-2xl border border-white/10 bg-zinc-900/40 p-6
-                  transition hover:border-emerald-500/40 hover:bg-zinc-900/60
-                "
+                key={s.k}
+                className="flex flex-col items-center text-center gap-2 rounded-2xl border border-secondary/5 bg-white p-6 shadow-xl shadow-secondary/5 hover:-translate-y-1 transition duration-300"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">{c.title}</h3>
-                    <p className="mt-2 text-sm text-white/70">{c.desc}</p>
-                  </div>
-                  <div
-                    className="
-                      h-10 w-10 shrink-0 rounded-xl border border-white/10
-                      bg-white/5 transition group-hover:border-emerald-500/40 group-hover:bg-emerald-500/10
-                    "
-                  />
-                </div>
+                <span className="text-3xl mb-2">{s.i}</span>
+                <p className="text-lg font-bold text-secondary">{s.k}</p>
+                <p className="text-sm text-secondary/60">{s.v}</p>
               </div>
             ))}
           </div>
 
-          {/* NEW: Services list (more details) */}
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-6">
-              <h3 className="text-lg font-semibold text-white">What we do</h3>
-              <ul className="mt-3 space-y-2 text-sm text-white/70">
-                <li>• New PC builds (Gaming / Work / Office)</li>
-                <li>• Laptop & desktop repairs</li>
-                <li>• SSD/RAM upgrades + OS installations</li>
-                <li>• Cleaning & thermal paste service</li>
-              </ul>
-            </div>
+          {/* Category cards */}
+          <RevealOnScroll>
+            <div className="grid gap-6 md:grid-cols-3">
+              {[
+                {
+                  title: "Luxury Bedsheets",
+                  desc: "300-1000 Thread Count",
+                  img: "https://images.pexels.com/photos/1034584/pexels-photo-1034584.jpeg?auto=compress&cs=tinysrgb&w=800",
+                  link: "/products?category=Bedsheets"
+                },
+                {
+                  title: "Plush Pillows",
+                  desc: "Memory Foam & Down",
+                  img: "https://images.pexels.com/photos/1267338/pexels-photo-1267338.jpeg?auto=compress&cs=tinysrgb&w=800",
+                  link: "/products?category=Pillows"
+                },
+                {
+                  title: "Duvets & Sets",
+                  desc: "Complete Bedding Sets",
+                  img: "https://images.pexels.com/photos/1457847/pexels-photo-1457847.jpeg?auto=compress&cs=tinysrgb&w=800",
+                  link: "/products?category=Duvets"
+                },
+              ].map((c) => (
+                <Link
+                  key={c.title}
+                  to={c.link}
+                  className="
+                    group relative overflow-hidden rounded-3xl h-80 shadow-lg bg-gradient-to-br from-accent/20 to-secondary/30
+                  "
+                >
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10" />
+                  <img
+                    src={c.img}
+                    alt={c.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => { e.target.style.display = 'none' }}
+                  />
 
-            <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-6">
-              <h3 className="text-lg font-semibold text-white">How it works</h3>
-              <ol className="mt-3 space-y-2 text-sm text-white/70">
-                <li>1) Tell us your need/budget</li>
-                <li>2) We recommend parts/options</li>
-                <li>3) Build/repair + testing</li>
-                <li>4) Pickup / delivery + support</li>
-              </ol>
+                  <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
+                    <h3 className="text-2xl font-bold text-white drop-shadow-md translate-y-0 transition-transform duration-300 group-hover:-translate-y-2">{c.title}</h3>
+                    <p className="text-white/90 font-medium translate-y-0 transition-transform duration-300 group-hover:-translate-y-2">{c.desc}</p>
+
+                    <div className="mt-4 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      <span className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-bold text-secondary">
+                        Shop Now
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </div>
+          </RevealOnScroll>
+
+          {/* NEW: Services list (more details) */}
+          <RevealOnScroll>
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-secondary/10 bg-white p-6 hover:shadow-md transition duration-300">
+                <h3 className="text-lg font-semibold text-secondary">Why Choose SoftDreams?</h3>
+                <ul className="mt-3 space-y-2 text-sm text-secondary/70">
+                  <li>• Premium Materials (100% Cotton, Satin, Linen)</li>
+                  <li>• Custom Sizes Available</li>
+                  <li>• Fade-Resistant Colors</li>
+                  <li>• Easy Care & Long Lasting</li>
+                </ul>
+              </div>
+
+              <div className="rounded-2xl border border-secondary/10 bg-white p-6 hover:shadow-md transition duration-300">
+                <h3 className="text-lg font-semibold text-secondary">Ordering Process</h3>
+                <ol className="mt-3 space-y-2 text-sm text-secondary/70">
+                  <li>1) Browse our collection</li>
+                  <li>2) Select your size and color</li>
+                  <li>3) Secure checkout</li>
+                  <li>4) Fast delivery to your doorstep</li>
+                </ol>
+              </div>
+            </div>
+          </RevealOnScroll>
 
           {/* CTA strip */}
-          <div className="mt-8 rounded-2xl border border-white/10 bg-gradient-to-r from-emerald-500/10 via-white/5 to-sky-500/10 p-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-white">
-                  Need help choosing parts?
-                </h3>
-                <p className="mt-1 text-sm text-white/70">
-                  Tell us your budget and we’ll recommend the best build.
-                </p>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to="/products"
-                  className="
-                    inline-flex items-center justify-center rounded-xl
-                    bg-white px-5 py-3 text-sm font-semibold text-zinc-950
-                    transition hover:bg-white/90
-                  "
-                >
-                  Browse Products
-                </Link>
-                <Link
-                  to="/contact"
-                  className="
-                    inline-flex items-center justify-center rounded-xl
-                    border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white
-                    transition hover:bg-white/10
-                  "
-                >
-                  Talk to an Expert
-                </Link>
+          <RevealOnScroll>
+            <div className="mt-8 rounded-2xl border border-secondary/10 bg-gradient-to-r from-accent/10 via-white/5 to-secondary/10 p-6 shadow-sm">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-secondary">
+                    Looking for something specific?
+                  </h3>
+                  <p className="mt-1 text-sm text-secondary/70">
+                    We offer custom sizes and bulk orders for hotels and businesses.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    to="/products"
+                    className="
+                      inline-flex items-center justify-center rounded-xl
+                      bg-white px-5 py-3 text-sm font-semibold text-zinc-950
+                      transition hover:bg-white/90 hover:-translate-y-1 hover:shadow-md
+                    "
+                  >
+                    Browse Products
+                  </Link>
+                  <Link
+                    to="/contact"
+                    className="
+                      inline-flex items-center justify-center rounded-xl
+                      border border-secondary/20 bg-white/5 px-5 py-3 text-sm font-semibold text-secondary
+                      transition hover:bg-secondary/10
+                    "
+                  >
+                    Talk to an Expert
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
+          </RevealOnScroll>
         </div>
       </section>
 
@@ -245,6 +247,25 @@ export default function Home() {
           }
         `}
       </style>
+
+      {/* Testimonials Section */}
+      <RevealOnScroll>
+        <section className="w-full py-20 bg-gradient-soft">
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
+                What Our Customers Say
+              </h2>
+              <p className="text-secondary/60 max-w-2xl mx-auto">
+                Don't just take our word for it - hear from our happy customers
+              </p>
+            </div>
+            <TestimonialsCarousel />
+          </div>
+        </section>
+      </RevealOnScroll>
+
+      <NewsletterPopup />
     </main>
   );
 }
