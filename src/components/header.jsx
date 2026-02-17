@@ -5,6 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 import UserData from "./userData";
 import { useWishlist } from "../context/WishlistContext";
+import Logo from "../assets/softdreams-logo.svg";
 
 export default function Header() {
   const [sideBarOpen, setSideBarOpen] = useState(false);
@@ -50,9 +51,11 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <span className={`text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${scrolled ? "text-accent" : "text-white"}`}>
-            SoftDreams
-          </span>
+          <img
+            src={Logo}
+            alt="SoftDreams Logo"
+            className={`h-10 sm:h-12 w-auto transition-all ${scrolled ? "" : "brightness-0 invert drop-shadow-md"}`}
+          />
         </Link>
 
         {/* Desktop Links */}

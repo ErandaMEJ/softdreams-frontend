@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaInstagram, FaTwitter, FaPinterest } from "react-icons/fa";
+import Logo from "../assets/softdreams-logo.svg";
 
 export default function Footer() {
   return (
@@ -9,7 +10,9 @@ export default function Footer() {
 
           {/* Brand Column */}
           <div className="space-y-4 flex flex-col items-center md:items-start">
-            <span className="text-2xl font-bold text-accent tracking-tight">SoftDreams</span>
+            <Link to="/" className="block">
+              <img src={Logo} alt="SoftDreams Logo" className="h-24 w-auto brightness-0 invert opacity-90 hover:opacity-100 transition-opacity" />
+            </Link>
             <p className="text-sm text-primary/70 leading-relaxed">
               Experience the ultimate luxury in bedding. Premium materials, exquisite designs, and comfort that lasts a lifetime.
             </p>
