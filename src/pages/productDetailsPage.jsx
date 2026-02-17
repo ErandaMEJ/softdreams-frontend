@@ -30,7 +30,7 @@ export default function ProductDetailsPage() {
 
   const fetchProduct = useCallback(async () => {
     try {
-      setLoaded(false);
+      // setLoaded(false); // Disable full screen loader on refresh
       const res = await axios.get(`${backendUrl}/products/${productID}`);
       setProduct(res.data);
       setLoaded(true);

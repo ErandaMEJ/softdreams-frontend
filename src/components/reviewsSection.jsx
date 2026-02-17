@@ -133,8 +133,8 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
 
       toast.error(
         err?.response?.data?.error ||
-          err?.response?.data?.message ||
-          "Error adding review"
+        err?.response?.data?.message ||
+        "Error adding review"
       );
     } finally {
       setSubmitting(false);
@@ -155,7 +155,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 rounded-2xl border border-secondary/10 bg-white/5 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-2xl border border-secondary/10 bg-secondary/5 px-4 py-3">
           <StarRating value={product?.rating ?? 0} />
           <span className="text-secondary/70 text-sm">
             ({product?.numReviews ?? 0} approved)
@@ -166,7 +166,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
       {/* Approved reviews list */}
       <div className="mt-6 grid grid-cols-1 gap-4">
         {approvedReviews.length === 0 ? (
-          <div className="rounded-2xl border border-secondary/10 bg-white/5 p-6 text-secondary/70">
+          <div className="rounded-2xl border border-secondary/10 bg-secondary/5 p-6 text-secondary/70">
             <p className="font-semibold text-secondary">No reviews yet</p>
             <p className="mt-1 text-sm text-secondary/70">
               Be the first to leave a review.
@@ -179,7 +179,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
             .map((r) => (
               <div
                 key={r._id}
-                className="rounded-2xl border border-secondary/10 bg-white/5 p-5 shadow-sm"
+                className="rounded-2xl border border-secondary/10 bg-secondary/5 p-5 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -200,7 +200,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
       </div>
 
       {/* Add review */}
-      <div className="mt-8 rounded-2xl border border-secondary/10 bg-white/5 p-6 shadow-sm">
+      <div className="mt-8 rounded-2xl border border-secondary/10 bg-secondary/5 p-6 shadow-sm">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-secondary">Add a review</h3>
