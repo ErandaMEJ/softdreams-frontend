@@ -252,7 +252,7 @@ export default function Header() {
 
             <div className="mt-6 pt-6 border-t border-gray-100">
               <div className="px-4">
-                <UserData />
+                <UserData scrolled={true} />
               </div>
             </div>
           </div>
