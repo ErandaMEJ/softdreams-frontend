@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 
 // https://vite.dev/config/
+// Force Vercel Rebuild
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 })
