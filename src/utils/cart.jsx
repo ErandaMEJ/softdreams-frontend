@@ -89,7 +89,36 @@ export function addToCart(product, quantity) {
             toast.success("Removed from cart");
         } else {
             cart[index].quantity = newQty;
-            toast.success(`Updated ${product.name} quantity to ${newQty}`);
+            cart[index].quantity = newQty;
+            toast.custom((t) => (
+                <div
+                    className={`${t.visible ? 'animate-enter' : 'animate-leave'
+                        } max-w-sm w-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-2xl pointer-events-auto flex ring-1 ring-black/5 overflow-hidden border border-secondary/5`}
+                >
+                    <div className="flex-1 p-4">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                                <img
+                                    className="h-14 w-14 rounded-xl object-cover shadow-sm bg-gray-50"
+                                    src={product.images?.[0] || product.image || cart[index].image}
+                                    alt=""
+                                />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-secondary">
+                                    Cart Updated!
+                                </p>
+                                <p className="text-xs text-secondary/60 line-clamp-1 mt-0.5">
+                                    {product.name}
+                                </p>
+                                <p className="text-xs font-medium text-accent mt-1">
+                                    Quantity: {newQty}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ));
         }
     }
     const cartString = JSON.stringify(cart);
