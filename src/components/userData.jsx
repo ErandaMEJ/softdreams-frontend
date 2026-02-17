@@ -67,6 +67,16 @@ export default function UserData({ scrolled }) {
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2">
+          {user.role === "admin" && (
+            <button
+              type="button"
+              onClick={() => (window.location.href = "/admin")}
+              className="col-span-2 h-10 rounded-xl border border-secondary/15 bg-accent/10 text-accent font-semibold hover:bg-accent/20 transition mb-2"
+            >
+              Admin Panel
+            </button>
+          )}
+
           <button
             type="button"
             onClick={() => (window.location.href = "/orders")}
@@ -148,6 +158,22 @@ export default function UserData({ scrolled }) {
             </div>
 
             <div className="h-px bg-secondary/10" />
+
+            {user.role === "admin" && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    window.location.href = "/admin";
+                  }}
+                  className="w-full text-left px-4 py-3 text-sm font-semibold text-accent hover:bg-accent/5 transition"
+                >
+                  Admin Panel
+                </button>
+                <div className="h-px bg-secondary/10" />
+              </>
+            )}
 
             <button
               type="button"

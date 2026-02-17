@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { FaCartShopping, FaHeart, FaSearch } from "react-icons/fa";
+import { FaHeart, FaSearch } from "react-icons/fa";
+import { FaCartShopping } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
 import axios from "axios";

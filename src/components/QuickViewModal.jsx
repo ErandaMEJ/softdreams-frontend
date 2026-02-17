@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuickView } from '../context/QuickViewContext';
 import { IoClose } from 'react-icons/io5';
-import { FacartPlus, FaStar } from 'react-icons/fa';
+// import { FacartPlus, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import StarRating from './starRating';
 
