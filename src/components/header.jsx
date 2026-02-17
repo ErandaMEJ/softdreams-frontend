@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { FaCartShopping, FaHeart } from "react-icons/fa6";
+import { FaCartShopping, FaHeart, FaSearch } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
+import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import UserData from "./userData";
 import { useWishlist } from "../context/WishlistContext";
@@ -22,6 +23,32 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Search Logic
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  useEffect(() => {
+    // Fetch products for search
+    axios.get(import.meta.env.VITE_BACKEND_URL + "/products").then(res => {
+      setAllProducts(res.data);
+    }).catch(err => console.error(err));
+  }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (query.trim().length > 0) {
+      const filtered = allProducts.filter(p =>
+        p.name.toLowerCase().includes(query.toLowerCase()) ||
+        p.category.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredProducts(filtered.slice(0, 5));
+    } else {
+      setFilteredProducts([]);
+    }
+  };
 
   const navLinks = [
     { to: "/", label: "Home" },
@@ -92,6 +119,50 @@ export default function Header() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+
+          {/* Search Bar (Desktop) */}
+          <div className="hidden md:block relative mr-2">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className={`
+                        w-40 lg:w-48 pl-3 pr-8 py-1.5 rounded-full text-sm focus:outline-none transition-all border
+                        ${scrolled
+                    ? "bg-gray-50 border-gray-200 text-gray-800 focus:ring-1 focus:ring-accent focus:border-accent"
+                    : "bg-white/10 border-white/20 text-white placeholder-white/70 focus:bg-white/20"
+                  }
+                    `}
+              />
+              <FaSearch className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${scrolled ? "text-gray-400" : "text-white/60"}`} />
+            </div>
+
+            {/* Search Dropdown */}
+            {searchQuery && (
+              <div className="absolute top-full right-0 w-72 bg-white rounded-xl shadow-xl mt-3 overflow-hidden border border-gray-100 py-2">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map(p => (
+                    <Link
+                      to={`/overview/${p.productID}`}
+                      key={p.productID}
+                      onClick={() => setSearchQuery("")}
+                      className="block px-4 py-2 hover:bg-gray-50 flex items-center gap-3 transition-colors"
+                    >
+                      <img src={p.images?.[0]} alt={p.name} className="w-10 h-10 rounded-md object-cover bg-gray-100" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-800 text-sm truncate">{p.name}</p>
+                        <p className="text-xs text-accent font-semibold">Rs. {p.price.toLocaleString()}</p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-sm text-gray-500 text-center">No products found</div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Wishlist */}
           <Link

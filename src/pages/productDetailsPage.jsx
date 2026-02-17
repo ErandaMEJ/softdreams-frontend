@@ -3,12 +3,16 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/loader";
+import SizeGuideModal from "../components/SizeGuideModal";
+import { FaRuler } from "react-icons/fa";
+import ProductCard from "../components/productCard";
 
 export default function ProductDetailsPage() {
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
+  const [isSizeGuideOpen, setSizeGuideOpen] = useState(false);
 
   // review form state
   const [name, setName] = useState("");
@@ -174,7 +178,19 @@ export default function ProductDetailsPage() {
               Stock: {product.stock} | Brand: {product.brand} | Model:{" "}
               {product.model}
             </div>
+
+            {/* Size Guide Button */}
+            <div className="mt-4">
+              <button
+                onClick={() => setSizeGuideOpen(true)}
+                className="flex items-center gap-2 text-accent font-medium hover:underline text-sm"
+              >
+                <FaRuler className="text-lg" /> Size Guide
+              </button>
+            </div>
           </div>
+
+          <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
         </div>
 
         {/* Reviews + Form */}
@@ -376,15 +392,7 @@ function RelatedProducts({ category, currentId }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
       {related.map(p => (
-        <div key={p.productID} className="border border-gray-100 rounded-lg p-4 hover:shadow-lg transition-shadow">
-          <a href={`/products/${p.productID}`} className="block">
-            <div className="h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-              <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
-            </div>
-            <h3 className="font-semibold text-gray-800 line-clamp-1">{p.name}</h3>
-            <p className="text-primary font-bold mt-1">Rs. {p.price.toLocaleString()}</p>
-          </a>
-        </div>
+        <ProductCard key={p.productID} product={p} />
       ))}
     </div>
   );

@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import StarRating from "./starRating";
 import { FaEye, FaHeart, FaRegHeart } from "react-icons/fa";
 import { useWishlist } from "../context/WishlistContext";
+import { useQuickView } from "../context/QuickViewContext";
 import toast from "react-hot-toast";
 
 export default function ProductCard(props) {
   const product = props.product;
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { openQuickView } = useQuickView();
   const inWishlist = isInWishlist(product.productID);
 
   const handleWishlistClick = (e) => {
@@ -73,14 +75,20 @@ export default function ProductCard(props) {
 
         {/* Overlay & Quick Action */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <span className="
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openQuickView(product);
+            }}
+            className="
               transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100
               transition-all duration-500 delay-75
               bg-white text-secondary px-6 py-2 rounded-full font-medium text-sm flex items-center gap-2
               hover:bg-accent hover:text-white
             ">
-            <FaEye /> View Details
-          </span>
+            <FaEye /> Quick View
+          </button>
         </div>
 
         {/* Badges (e.g., Sale) */}
