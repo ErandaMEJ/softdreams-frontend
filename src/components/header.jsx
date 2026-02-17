@@ -194,8 +194,9 @@ export default function Header() {
             {/* <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" /> */}
           </Link>
 
-          {/* User Data (Desktop) */}
-          <div className="hidden lg:block">
+
+          {/* User Data (Header - Responsive) */}
+          <div>
             <UserData scrolled={scrolled} />
           </div>
         </div>
@@ -252,7 +253,7 @@ export default function Header() {
 
             <div className="mt-6 pt-6 border-t border-gray-100">
               <div className="px-4">
-                <UserData scrolled={true} />
+                <UserData scrolled={true} isSidebar={true} />
               </div>
             </div>
           </div>
