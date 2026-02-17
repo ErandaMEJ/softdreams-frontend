@@ -160,7 +160,6 @@ export default function ProductOverview() {
               <button
                 onClick={() => {
                   addToCart(product, 1);
-                  toast.success("Added to cart");
                 }}
                 className="flex-1 py-4 rounded-xl border border-secondary/10 bg-white text-secondary font-bold text-lg hover:bg-gray-50 hover:border-secondary/30 transition shadow-sm disabled:opacity-50"
                 disabled={!product?.isAvailable}

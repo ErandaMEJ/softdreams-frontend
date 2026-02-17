@@ -24,8 +24,9 @@ export default function LoginPage() {
       toast.success("Login successful!");
       goAfterLogin(res.data.role);
     } catch (err) {
-      console.log(err);
-      toast.error("Google login failed");
+      console.error(err);
+      const errorMessage = err.response?.data?.message || err.message || "Google login failed";
+      toast.error(`Login error: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
