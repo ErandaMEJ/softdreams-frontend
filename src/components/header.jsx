@@ -50,12 +50,16 @@ export default function Header() {
         </button>
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
+        {/* Logo and Text */}
+        <Link to="/" className="flex items-center gap-3">
           <img
             src={Logo}
             alt="SoftDreams Logo"
-            className={`h-10 sm:h-12 w-auto transition-all ${scrolled ? "" : "brightness-0 invert drop-shadow-md"}`}
+            className="h-10 sm:h-12 w-auto object-contain rounded-md"
           />
+          <span className={`text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${scrolled ? "text-accent" : "text-white"}`}>
+            SoftDreams
+          </span>
         </Link>
 
         {/* Desktop Links */}

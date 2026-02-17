@@ -10,8 +10,9 @@ export default function Footer() {
 
           {/* Brand Column */}
           <div className="space-y-4 flex flex-col items-center md:items-start">
-            <Link to="/" className="block">
-              <img src={Logo} alt="SoftDreams Logo" className="h-24 w-auto brightness-0 invert opacity-90 hover:opacity-100 transition-opacity" />
+            <Link to="/" className="flex items-center gap-3 group">
+              <img src={Logo} alt="SoftDreams Logo" className="h-16 w-auto object-contain rounded-md group-hover:scale-105 transition-transform" />
+              <span className="text-2xl font-bold text-accent tracking-tight">SoftDreams</span>
             </Link>
             <p className="text-sm text-primary/70 leading-relaxed">
               Experience the ultimate luxury in bedding. Premium materials, exquisite designs, and comfort that lasts a lifetime.
