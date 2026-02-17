@@ -23,6 +23,7 @@ export function QuickViewProvider({ children }) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useQuickView() {
     return useContext(QuickViewContext);
 }

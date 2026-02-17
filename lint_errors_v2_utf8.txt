@@ -1,0 +1,16 @@
+﻿
+> softdreams-frontend@0.0.0 lint
+> eslint .
+
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\admin\adminProductReviews.jsx
+  24:16  error  'useCallback' is not defined  no-undef
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\checkOut.jsx
+   59:5   error  'setLoading' is not defined  no-undef
+   84:22  error  'setLoading' is not defined  no-undef
+  215:27  error  'loading' is not defined     no-undef
+  218:18  error  'loading' is not defined     no-undef
+
+Γ£û 5 problems (5 errors, 0 warnings)
+

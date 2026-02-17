@@ -10,13 +10,8 @@ export default function CheckoutPage() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [cart, setCart] = useState(location.state);
+  const [cart] = useState(location.state);
   const [loading, setLoading] = useState(false);
-
-  // Trending mini section state
-  const [trending, setTrending] = useState([]);
-  const [trendingStatus, setTrendingStatus] = useState("idle");
-
   useEffect(() => {
     if (location.state == null) {
       navigate("/products");
@@ -25,24 +20,7 @@ export default function CheckoutPage() {
 
   const isEmptyCart = !cart || cart.length === 0;
 
-  // Load trending products only when cart is empty
-  useEffect(() => {
-    if (!isEmptyCart) return;
-    if (trendingStatus !== "idle") return;
 
-    setTrendingStatus("loading");
-
-    axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/products")
-      .then((res) => {
-        const list = Array.isArray(res.data) ? res.data : [];
-        setTrending(list.slice(0, 6));
-        setTrendingStatus("success");
-      })
-      .catch(() => {
-        setTrendingStatus("error");
-      });
-  }, [isEmptyCart, trendingStatus]);
 
   if (isEmptyCart) {
     return (

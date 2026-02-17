@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Loader from "../components/loader";
 import axios from "axios";
 import ProductCard from "../components/productCard";
@@ -23,7 +23,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     applyFilters();
-  }, [products, priceRange, sortBy]);
+  }, [applyFilters]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -38,7 +38,7 @@ export default function ProductPage() {
     }
   };
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...products];
 
     // Category filter
@@ -78,7 +78,7 @@ export default function ProductPage() {
     }
 
     setFilteredProducts(filtered);
-  };
+  }, [products, selectedCategory, searchQuery, priceRange, sortBy]);
 
   return (
     <div className="w-full min-h-screen bg-primary">

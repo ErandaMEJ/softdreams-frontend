@@ -22,7 +22,7 @@ export default function ProductPage() {
       try {
         const res = await axios.get(`/api/products/${productID}`);
         setProduct(res.data);
-      } catch (err) {
+      } catch {
         setError("Error loading product");
       } finally {
         setLoading(false);
@@ -130,4 +130,4 @@ export default function ProductPage() {
       </form>
     </div>
   );
-}ස්
+}

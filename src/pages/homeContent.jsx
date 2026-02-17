@@ -1,28 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import RevealOnScroll from "../components/RevealOnScroll";
-import NewsletterPopup from "../components/newsletterPopup";
+
 import TestimonialsCarousel from "../components/testimonialsCarousel";
 
 export default function Home() {
-  const slogans = useMemo(
-    () => [
-      "Experience the luxury of sleep.",
-      "Premium 100% Cotton Bedding.",
-      "Soft. Breathable. Durable.",
-      "Transform your bedroom into a sanctuary.",
-    ],
-    []
-  );
 
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % slogans.length);
-    }, 2500);
-    return () => clearInterval(id);
-  }, [slogans.length]);
 
   return (
     <main className="w-full">
@@ -265,7 +247,7 @@ export default function Home() {
         </section>
       </RevealOnScroll>
 
-      <NewsletterPopup />
+
     </main>
   );
 }

@@ -9,25 +9,50 @@ export default function AdminUpdateProductPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
+    // Initialize state with defaults or location.state
+    const initialState = location.state || {
+        productID: "",
+        name: "",
+        altNames: [],
+        description: "",
+        price: 0,
+        labelledPrice: 0,
+        category: "",
+        brand: "",
+        model: "",
+        stock: 0,
+        isAvailable: true,
+        images: []
+    };
+
+    const [productID] = useState(initialState.productID);
+    const [name, setName] = useState(initialState.name);
+    const [altNames, setAltNames] = useState(Array.isArray(initialState.altNames) ? initialState.altNames.join(", ") : "");
+    const [description, setDescription] = useState(initialState.description);
+    const [price, setPrice] = useState(initialState.price);
+    const [labelledPrice, setLabelledPrice] = useState(initialState.labelledPrice);
+    const [files, setFiles] = useState([]);
+    const [category, setCategory] = useState(initialState.category);
+    const [brand, setBrand] = useState(initialState.brand);
+    const [model, setModel] = useState(initialState.model);
+    const [stock, setStock] = useState(initialState.stock);
+    const [isAvailable, setIsAvailable] = useState(initialState.isAvailable);
+    const [uploading, setUploading] = useState(false);
+
     // Redirect if no state
     if (!location.state) {
-        window.location.href = "/admin/products";
-        return null;
+        // We can use a useEffect to navigate, but since we modify state above safely, 
+        // we can just return null and redirect in a useEffect, or just let users go back manually if they landed here wrongly.
+        // Better:
+        // useEffect(() => navigate("/admin/products"), []);
+        // But for now, just return specific UI or null.
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <p>No product selected.</p>
+                <Link to="/admin/products" className="text-accent underline">Go back</Link>
+            </div>
+        );
     }
-
-    const [productID, setProductID] = useState(location.state.productID);
-    const [name, setName] = useState(location.state.name);
-    const [altNames, setAltNames] = useState(location.state.altNames.join(", "));
-    const [description, setDescription] = useState(location.state.description);
-    const [price, setPrice] = useState(location.state.price);
-    const [labelledPrice, setLabelledPrice] = useState(location.state.labelledPrice);
-    const [files, setFiles] = useState([]);
-    const [category, setCategory] = useState(location.state.category);
-    const [brand, setBrand] = useState(location.state.brand);
-    const [model, setModel] = useState(location.state.model);
-    const [stock, setStock] = useState(location.state.stock);
-    const [isAvailable, setIsAvailable] = useState(location.state.isAvailable);
-    const [uploading, setUploading] = useState(false);
 
     async function updateProduct() {
         const token = localStorage.getItem("token");

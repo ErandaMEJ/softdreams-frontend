@@ -20,13 +20,7 @@ export default function Contact() {
     );
   }
 
-  function buildMailtoLink() {
-    const subject = `SoftDreams Inquiry - ${form.name || "Customer"}`;
-    const body = buildEmailBody();
-    return `mailto:${TO_EMAIL}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-  }
+
 
   function buildGmailLink() {
     const subject = `SoftDreams Inquiry - ${form.name || "Customer"}`;

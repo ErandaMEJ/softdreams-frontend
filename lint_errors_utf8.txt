@@ -1,0 +1,62 @@
+﻿
+> softdreams-frontend@0.0.0 lint
+> eslint .
+
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\components\productReviewsSection.jsx
+   25:16  error  'err' is defined but never used  no-unused-vars
+  133:2   error  'α╖âα╖è' is not defined              no-undef
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\context\QuickViewContext.jsx
+  26:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\context\RecentlyViewedContext.jsx
+  40:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\context\WishlistContext.jsx
+  56:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\admin\adminProductReviews.jsx
+  35:13  error    'rRes' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                     no-unused-vars
+  62:6   warning  React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\admin\adminUpdateProductPage.jsx
+  18:23  error  'setProductID' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                 no-unused-vars
+  18:39  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  19:29  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  20:37  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  21:43  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  22:31  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  23:47  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  24:31  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  25:37  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  26:31  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  27:31  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  28:31  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  29:43  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  30:39  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\checkOut.jsx
+  13:16  error  'setCart' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+  17:10  error  'trending' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\contact.jsx
+  23:12  error  'buildMailtoLink' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\homeContent.jsx
+  18:10  error  'index' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\productDetailsPage.jsx
+  46:6  warning  React Hook useEffect has a missing dependency: 'fetchProduct'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\productOverview.jsx
+  6:21  error  'getCart' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\productPage.jsx
+  26:6  warning  React Hook useEffect has a missing dependency: 'applyFilters'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\reviewOverviewPage.jsx
+  8:33  error  Parsing error: Unexpected token axios
+
+Γ£û 29 problems (26 errors, 3 warnings)
+

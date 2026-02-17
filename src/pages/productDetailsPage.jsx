@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/loader";
@@ -28,7 +28,7 @@ export default function ProductDetailsPage() {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  async function fetchProduct() {
+  const fetchProduct = useCallback(async () => {
     try {
       setLoaded(false);
       const res = await axios.get(`${backendUrl}/products/${productID}`);
@@ -39,11 +39,11 @@ export default function ProductDetailsPage() {
       setError("Error loading product");
       setLoaded(true);
     }
-  }
+  }, [backendUrl, productID]);
 
   useEffect(() => {
     fetchProduct();
-  }, [productID]);
+  }, [fetchProduct]);
 
   // normal user review submit
   async function handleSubmitReview(e) {

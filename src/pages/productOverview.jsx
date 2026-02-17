@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Loader from "../components/loader";
 import ImageSlider from "../components/imageSlider";
-import { addToCart, getCart } from "../utils/cart";
+import { addToCart } from "../utils/cart";
 import { HiChevronRight, HiOutlineTruck, HiOutlineShieldCheck, HiOutlineSparkles } from "react-icons/hi";
 import ReviewsSection from "../components/reviewsSection";
 import StarRating from "../components/starRating";

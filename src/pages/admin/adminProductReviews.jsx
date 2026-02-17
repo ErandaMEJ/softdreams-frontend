@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Loader from "../../components/loader";
@@ -21,7 +21,7 @@ export default function AdminProductReviews() {
   const [status, setStatus] = useState("loading");
   const [workingId, setWorkingId] = useState(null);
 
-  async function load() {
+  const load = useCallback(async () => {
     setStatus("loading");
     try {
       // get product (for name/rating)
@@ -32,7 +32,7 @@ export default function AdminProductReviews() {
       // Note: Assuming the backend has this endpoint as per original code. 
       // If not, we might need to filter from all reviews.
       // But let's stick to the original endpoint assumption.
-      const rRes = await axios.get(import.meta.env.VITE_BACKEND_URL + `/products/${productID}/reviews`);
+      await axios.get(import.meta.env.VITE_BACKEND_URL + `/products/${productID}/reviews`);
       // The original code used /reviews/admin but that might not exist based on previous file analysis.
       // Wait, let's verify if `adiminReviewsPage.jsx` used `/products`.
       // The previous file used `api` util, let's check if `api` util adds base URL.
@@ -55,11 +55,11 @@ export default function AdminProductReviews() {
       console.error(err);
       setStatus("error");
     }
-  }
+  }, [productID]);
 
   useEffect(() => {
     load();
-  }, [productID]);
+  }, [load]);
 
   const pending = useMemo(
     () => (reviews || []).filter((r) => !r.isApproved),
