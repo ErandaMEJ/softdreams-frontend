@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Loader from "../components/loader";
 import axios from "axios";
 import ProductCard from "../components/productCard";
@@ -8,19 +9,33 @@ import { FaSearch, FaFilter, FaSortAmountDown } from "react-icons/fa";
 const categories = ["All", "Bedsheets", "Pillows", "Duvets", "Comforters", "Accessories"];
 
 export default function ProductPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Initialize state from URL params
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All");
+
   const [priceRange, setPriceRange] = useState([0, 50000]);
   const [sortBy, setSortBy] = useState("featured"); // featured, price-low, price-high, rating, name
   const [showFilters, setShowFilters] = useState(false);
 
+  // Sync state to URL
+  useEffect(() => {
+    const params = {};
+    if (selectedCategory !== "All") params.category = selectedCategory;
+    if (searchQuery) params.search = searchQuery;
+    setSearchParams(params, { replace: true });
+  }, [selectedCategory, searchQuery, setSearchParams]);
+
   useEffect(() => {
     fetchProducts();
-  }, [selectedCategory, searchQuery]);
+  }, []); // Only fetch once on mount
 
+  // Filtering logic runs whenever dependencies change
   useEffect(() => {
     let filtered = [...products];
 
@@ -29,7 +44,6 @@ export default function ProductPage() {
       filtered = filtered.filter((p) => p.category === selectedCategory);
     }
 
-    // Search filter
     if (searchQuery.trim()) {
       filtered = filtered.filter((p) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase())
