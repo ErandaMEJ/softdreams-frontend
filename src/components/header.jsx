@@ -85,11 +85,6 @@ export default function Header() {
             src={Logo}
             alt="SoftDreams Logo"
             className="h-10 sm:h-12 w-auto object-contain rounded-md transition-all"
-            style={{
-              filter: scrolled
-                ? 'sepia(1) saturate(5) hue-rotate(5deg) brightness(0.9) contrast(1.2)'
-                : 'brightness(0) invert(1)'
-            }}
           />
           <span className={`text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${scrolled ? "text-accent" : "text-white"}`}>
             SoftDreams

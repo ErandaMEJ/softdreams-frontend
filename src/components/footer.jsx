@@ -12,7 +12,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="space-y-4 flex flex-col items-center md:items-start">
             <Link to="/" className="flex items-center gap-3 group">
-              <img src={Logo} alt="SoftDreams Logo" className="h-16 w-auto object-contain rounded-md group-hover:scale-105 transition-transform brightness-0 invert opacity-90 hover:opacity-100" />
+              <img src={Logo} alt="SoftDreams Logo" className="h-16 w-auto object-contain rounded-md group-hover:scale-105 transition-transform opacity-90 hover:opacity-100" />
               <span className="text-2xl font-bold text-accent tracking-tight">SoftDreams</span>
             </Link>
             <p className="text-sm text-primary/70 leading-relaxed">
