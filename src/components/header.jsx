@@ -5,7 +5,8 @@ import { IoClose } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 import UserData from "./userData";
 import { useWishlist } from "../context/WishlistContext";
-import Logo from "../assets/softdreams-logo.svg";
+// import Logo from "../assets/softdreams-logo.svg";
+const Logo = "/logo.png";
 
 export default function Header() {
   const [sideBarOpen, setSideBarOpen] = useState(false);

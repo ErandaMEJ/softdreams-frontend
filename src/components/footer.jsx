@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaInstagram, FaTwitter, FaPinterest } from "react-icons/fa";
-import Logo from "../assets/softdreams-logo.svg";
+// import Logo from "../assets/softdreams-logo.svg";
+const Logo = "/logo.png";
 
 export default function Footer() {
   return (
