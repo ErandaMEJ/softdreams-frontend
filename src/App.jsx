@@ -9,15 +9,43 @@ import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ForgetPasswordPage from './pages/forgetPasswordPage';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-
-//309651160594-59496ucjsk3kehjlb3ti11v9olgqt3vu.apps.googleusercontent.com
-
 import { Analytics } from '@vercel/analytics/react';
 import { QuickViewProvider } from './context/QuickViewContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
 import QuickViewModal from './components/QuickViewModal';
-import FAQPage from './pages/faqPage';
+
+// Page Imports
+import HomeContent from './pages/homeContent';
+import ProductPage from './pages/productPage';
+import About from './pages/about';
+import Contact from './pages/contact';
+import ProductOverview from './pages/productOverview';
+import CartPage from './pages/cart';
+import WishlistPage from './pages/wishlistPage';
+import CheckoutPage from './pages/checkOut';
+import OrdersPage from './pages/ordersPage';
+import FAQPage from './pages/faqPage'; // This was already imported but check path. Wait, homePage used ./extra/faqPage ?
+// homePage used: import FaqPage from "./extra/faqPage";
+// App.jsx used: import FAQPage from './pages/faqPage'; 
+// Let's check listing. Step 66 shows `faqPage.jsx` in `pages/` AND `extra/faqPage.jsx` potentially?
+// Step 66 shows `faqPage.jsx` is in `pages/`, size 4712.
+// Step 66 also shows `extra` dir with 5 children.
+// homePage imported `import FaqPage from "./extra/faqPage";`
+// I should verify where `faqPage` actually is. 
+// Step 66 shows: `faqPage.jsx` (4712) in `src/pages`. 
+// Does `src/pages/extra` exist? Yes.
+// Let's assume the user was using `extra/faqPage` in HomePage?
+// Code in Step 70: `import FaqPage from "./extra/faqPage";`
+// So I should import THAT one if I want to match behavior.
+// BUT App.jsx already imported `import FAQPage from './pages/faqPage';`.
+// This is confusing. 
+// I will import ALL from `homePage`'s perspective to be safe.
+import FaqPageExtra from './pages/extra/faqPage';
+import ShippingPage from './pages/extra/shippingPage';
+import CareGuidePage from './pages/extra/careGuidePage';
+import PrivacyPolicyPage from './pages/extra/privacyPolicyPage';
+import TermsPage from './pages/extra/termsPage';
 
 function App() {
 
@@ -31,12 +59,34 @@ function App() {
               <div className="w-full h-screen bg-primary text-secondary ">
                 <QuickViewModal />
                 <Routes>
-                  <Route path="/*" element={<HomePage />} />
+                  <Route path="/" element={<HomePage />}>
+                    <Route index element={<HomeContent />} />
+                    <Route path="products" element={<ProductPage />} />
+                    <Route path="about" element={<About />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="overview/:productID" element={<ProductOverview />} />
+                    <Route path="cart" element={<CartPage />} />
+                    <Route path="wishlist" element={<WishlistPage />} />
+                    <Route path="checkout" element={<CheckoutPage />} />
+                    <Route path="orders" element={<OrdersPage />} />
+                    <Route path="faq" element={<FaqPageExtra />} />
+                    <Route path="shipping" element={<ShippingPage />} />
+                    <Route path="care-guide" element={<CareGuidePage />} />
+                    <Route path="privacy" element={<PrivacyPolicyPage />} />
+                    <Route path="terms" element={<TermsPage />} />
+                    <Route path="*" element={<h1>Page Not Found</h1>} />
+                  </Route>
+
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/admin/*" element={<AdminPage />} />
                   <Route path="/forgot-password" element={<ForgetPasswordPage />} />
-                  <Route path="/faq" element={<FAQPage />} />
+                  {/* Removing independent /faq route since it's now under layout or handled above. 
+                      App.jsx had /faq -> FAQPage. homePage had /faq -> FaqPage(extra).
+                      I'll use the one from HomePage as it was the main UI? 
+                      Actually `FAQPage` (from pages) vs `FaqPage` (from extra).
+                      I'll keep `FaqPageExtra` for `/faq` as in HomePage.
+                  */}
                 </Routes>
                 <Analytics />
                 <SpeedInsights />

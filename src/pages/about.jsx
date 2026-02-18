@@ -6,7 +6,7 @@ export default function About() {
       {/* Hero Section */}
       <section className="relative w-full h-[400px] flex items-center justify-center overflow-hidden bg-secondary">
         <img
-          src="https://images.unsplash.com/photo-1510300109033-5c317ad1438a?q=80&w=2670&auto=format&fit=crop"
+          src="/home.jpg"
           alt="SoftDreams Luxury Bedding"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
@@ -61,7 +61,7 @@ export default function About() {
           </div>
           <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl skew-x-1 group">
             <img
-              src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?q=80&w=2609&auto=format&fit=crop"
+              src="/bg.jpg"
               alt="Cozy Bed"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
@@ -70,62 +70,39 @@ export default function About() {
         </div>
 
         {/* Collection Grid */}
-        <div className="mt-24 text-center">
-          <h2 className="text-3xl font-bold text-secondary mb-12">Curated for Your Comfort</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {["Luxury Sheets", "Plush Pillows", "Duvet Covers", "Mattress Toppers"].map((item, idx) => (
-              <div key={idx} className="group relative overflow-hidden rounded-2xl h-64 shadow-md cursor-pointer">
-                <img
-                  src={[
-                    "https://images.unsplash.com/photo-1522771753035-0a1539503ed5?q=80&w=2070&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1584100936595-c0654b55a2e6?q=80&w=2000&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1616627561839-0717b07ad978?q=80&w=1974&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop"
-                  ][idx % 4]}
-                  alt={item}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-br from-secondary/80 to-accent/80 group-hover:scale-110 transition-transform duration-500`} />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h3 className="text-2xl font-bold text-white tracking-wide border-b-2 border-transparent group-hover:border-white transition-all pb-1">{item}</h3>
-                </div>
-              </div>
-            ))}
 
-            {/* Since I can't rely on source.unsplash 100% without potential rate limits, I'll replace the above grid with a text-based list that looks good */}
-          </div>
 
-          {/* Replacement for the grid above with a safer, text-icon based layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Luxury Sheets", icon: "✨" },
-              { title: "Plush Pillows", icon: "☁️" },
-              { title: "Duvet Covers", icon: "🛌" },
-              { title: "Protectors", icon: "🛡️" }
-            ].map((item, idx) => (
-              <div key={idx} className="p-8 rounded-2xl bg-white border border-secondary/10 hover:border-accent/50 hover:shadow-lg transition group text-left">
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 transform origin-left">{item.icon}</div>
-                <h3 className="text-xl font-bold text-secondary mb-2">{item.title}</h3>
-                <p className="text-xs text-secondary/60 uppercase tracking-widest font-semibold">Explore Collection &rarr;</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-24 rounded-3xl bg-secondary overflow-hidden relative shadow-2xl">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-          <div className="relative z-10 px-8 py-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Sleep?</h2>
-            <p className="text-white/80 max-w-2xl mx-auto text-lg mb-8">Join thousands of happy customers who wake up refreshed everyday with SoftDreams.</p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="/products" className="btn-primary bg-white text-secondary hover:bg-gray-100 hover:text-accent border-none text-lg px-8">Shop Now</a>
-              <a href="/contact" className="px-8 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition">Contact Us</a>
+        {/* Replacement for the grid above with a safer, text-icon based layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { title: "Luxury Sheets", icon: "✨" },
+            { title: "Plush Pillows", icon: "☁️" },
+            { title: "Duvet Covers", icon: "🛌" },
+            { title: "Protectors", icon: "🛡️" }
+          ].map((item, idx) => (
+            <div key={idx} className="p-8 rounded-2xl bg-white border border-secondary/10 hover:border-accent/50 hover:shadow-lg transition group text-left">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 transform origin-left">{item.icon}</div>
+              <h3 className="text-xl font-bold text-secondary mb-2">{item.title}</h3>
+              <p className="text-xs text-secondary/60 uppercase tracking-widest font-semibold">Explore Collection &rarr;</p>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="mt-24 rounded-3xl bg-secondary overflow-hidden relative shadow-2xl">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div className="relative z-10 px-8 py-16 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Sleep?</h2>
+          <p className="text-white/80 max-w-2xl mx-auto text-lg mb-8">Join thousands of happy customers who wake up refreshed everyday with SoftDreams.</p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="/products" className="btn-primary bg-white text-secondary hover:bg-gray-100 hover:text-accent border-none text-lg px-8">Shop Now</a>
+            <a href="/contact" className="px-8 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition">Contact Us</a>
           </div>
         </div>
-
       </div>
-    </main>
+
+    </div>
+    </main >
   );
 }
