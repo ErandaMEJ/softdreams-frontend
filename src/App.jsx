@@ -25,23 +25,8 @@ import CartPage from './pages/cart';
 import WishlistPage from './pages/wishlistPage';
 import CheckoutPage from './pages/checkOut';
 import OrdersPage from './pages/ordersPage';
-import FAQPage from './pages/faqPage'; // This was already imported but check path. Wait, homePage used ./extra/faqPage ?
-// homePage used: import FaqPage from "./extra/faqPage";
-// App.jsx used: import FAQPage from './pages/faqPage'; 
-// Let's check listing. Step 66 shows `faqPage.jsx` in `pages/` AND `extra/faqPage.jsx` potentially?
-// Step 66 shows `faqPage.jsx` is in `pages/`, size 4712.
-// Step 66 also shows `extra` dir with 5 children.
-// homePage imported `import FaqPage from "./extra/faqPage";`
-// I should verify where `faqPage` actually is. 
-// Step 66 shows: `faqPage.jsx` (4712) in `src/pages`. 
-// Does `src/pages/extra` exist? Yes.
-// Let's assume the user was using `extra/faqPage` in HomePage?
-// Code in Step 70: `import FaqPage from "./extra/faqPage";`
-// So I should import THAT one if I want to match behavior.
-// BUT App.jsx already imported `import FAQPage from './pages/faqPage';`.
-// This is confusing. 
-// I will import ALL from `homePage`'s perspective to be safe.
-import FaqPageExtra from './pages/extra/faqPage';
+
+import FaqPage from './pages/extra/faqPage';
 import ShippingPage from './pages/extra/shippingPage';
 import CareGuidePage from './pages/extra/careGuidePage';
 import PrivacyPolicyPage from './pages/extra/privacyPolicyPage';
@@ -69,7 +54,7 @@ function App() {
                     <Route path="wishlist" element={<WishlistPage />} />
                     <Route path="checkout" element={<CheckoutPage />} />
                     <Route path="orders" element={<OrdersPage />} />
-                    <Route path="faq" element={<FaqPageExtra />} />
+                    <Route path="faq" element={<FaqPage />} />
                     <Route path="shipping" element={<ShippingPage />} />
                     <Route path="care-guide" element={<CareGuidePage />} />
                     <Route path="privacy" element={<PrivacyPolicyPage />} />

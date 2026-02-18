@@ -1,0 +1,9 @@
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\components\reviewsSection.jsx
+  64:10  error  'accountDefaultName' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Documents\SoftDreams work\softdreams-frontend\src\pages\about.jsx
+  105:5  error  Parsing error: Expected corresponding JSX closing tag for <main>
+
+✖ 2 problems (2 errors, 0 warnings)
+

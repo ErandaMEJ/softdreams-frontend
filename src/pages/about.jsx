@@ -75,34 +75,43 @@ export default function About() {
         {/* Replacement for the grid above with a safer, text-icon based layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { title: "Luxury Sheets", icon: "✨" },
-            { title: "Plush Pillows", icon: "☁️" },
-            { title: "Duvet Covers", icon: "🛌" },
-            { title: "Protectors", icon: "🛡️" }
+            { title: "Luxury Sheets", image: "/home.jpg" },
+            { title: "Plush Pillows", image: "https://placehold.co/600x400?text=Plush+Pillows" },
+            { title: "Duvet Covers", image: "/bg.jpg" },
+            { title: "Protectors", image: "https://placehold.co/600x400?text=Protectors" }
           ].map((item, idx) => (
-            <div key={idx} className="p-8 rounded-2xl bg-white border border-secondary/10 hover:border-accent/50 hover:shadow-lg transition group text-left">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 transform origin-left">{item.icon}</div>
-              <h3 className="text-xl font-bold text-secondary mb-2">{item.title}</h3>
-              <p className="text-xs text-secondary/60 uppercase tracking-widest font-semibold">Explore Collection &rarr;</p>
+            <div key={idx} className="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
+              />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <span className="text-sm font-medium border-b border-white/50 pb-1 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                  View Collection
+                </span>
+              </div>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* CTA */}
-      <div className="mt-24 rounded-3xl bg-secondary overflow-hidden relative shadow-2xl">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="relative z-10 px-8 py-16 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Sleep?</h2>
-          <p className="text-white/80 max-w-2xl mx-auto text-lg mb-8">Join thousands of happy customers who wake up refreshed everyday with SoftDreams.</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="/products" className="btn-primary bg-white text-secondary hover:bg-gray-100 hover:text-accent border-none text-lg px-8">Shop Now</a>
-            <a href="/contact" className="px-8 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition">Contact Us</a>
+
+        {/* CTA */}
+        <div className="mt-24 rounded-3xl bg-secondary overflow-hidden relative shadow-2xl">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          <div className="relative z-10 px-8 py-16 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Sleep?</h2>
+            <p className="text-white/80 max-w-2xl mx-auto text-lg mb-8">Join thousands of happy customers who wake up refreshed everyday with SoftDreams.</p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <a href="/products" className="btn-primary bg-white text-secondary hover:bg-gray-100 hover:text-accent border-none text-lg px-8">Shop Now</a>
+              <a href="/contact" className="px-8 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition">Contact Us</a>
+            </div>
           </div>
         </div>
-      </div>
 
-    </div>
+      </div>
     </main >
   );
 }

@@ -7,8 +7,6 @@ import { WishlistProvider } from './context/WishlistContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <WishlistProvider>
-      <App />
-    </WishlistProvider>
+    <App />
   </StrictMode>,
 )
